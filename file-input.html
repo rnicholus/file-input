@@ -1,0 +1,44 @@
+<!--
+/**
+ * Fixes the browser's native `<input type="file">` by allow it to be easily 
+ * styled.  Also provides access to selected `File` object via a proper `Array`,
+ * and not a `FileList`, which is a pseudo-array.  Selected `File` objects are
+ * made available via a property on the custom element and via a custom event.
+ *
+ * Other conveniences include:
+ * - non-vendor-prefixed directory selection 
+ * - filtering via file extension
+ * - the ability to "reset" the element (clear selected files, etc)
+ * - allow camera access on mobile devices
+ *
+ * More features are likely to be added as requested (if this thing ever gets used).
+ */
+-->
+<link rel="import" href="bower_components/polymer/polymer.html">
+
+<polymer-element name="file-input" noscript>
+
+    <template>
+    
+        <style>
+            #file-input-input {
+                bottom: 0; 
+                height: 100%; 
+                left: 0; 
+                margin: 0; 
+                opacity: 0; 
+                padding: 0; 
+                position: absolute;
+                right: 0; 
+                top: 0; 
+                width: 100%; 
+            }
+        </style>
+        
+        <content></content>
+
+        <input id="file-input-input" type="file">
+
+    </template>
+    
+</polymer-element>
