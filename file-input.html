@@ -16,12 +16,12 @@
 -->
 <link rel="import" href="bower_components/polymer/polymer.html">
 
-<polymer-element name="file-input" noscript>
+<polymer-element name="file-input">
 
     <template>
     
         <style>
-            #file-input-input {
+            #fileInputInput {
                 bottom: 0; 
                 height: 100%; 
                 left: 0; 
@@ -37,8 +37,20 @@
         
         <content></content>
 
-        <input id="file-input-input" type="file">
+        <input id="fileInputInput" type="file" on-change="{{changeHandler}}">
 
     </template>
+    
+    <script>
+        /* globals Polymer */
+        Polymer("file-input", {
+            changeHandler: function() {
+                this.files = Array.prototype.slice.call(this.$.fileInputInput.files);
+                this.fire("change", this.files);
+            },
+            
+            files: []
+        });
+    </script>
     
 </polymer-element>
