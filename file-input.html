@@ -11,7 +11,7 @@
  * - the ability to "reset" the element (clear selected files, etc)
  * - allow camera access on mobile devices
  *
- * More features are likely to be added as requested (if this thing ever gets used).
+ * More features are likely to be added as requested.
  */
 -->
 <link rel="import" href="bower_components/polymer/polymer.html">
@@ -21,6 +21,10 @@
     <template>
     
         <style>
+            :host {
+                position: relative;
+            }
+        
             #fileInputInput {
                 bottom: 0; 
                 height: 100%; 
@@ -53,8 +57,6 @@
             
             files: [],
             
-            maxFiles: 0,
-
             ready: function() {
                 if (this.directory && this.$.fileInputInput.webkitdirectory !== undefined) {
                     this.$.fileInputInput.setAttribute("webkitdirectory", "");
