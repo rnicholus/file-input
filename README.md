@@ -1,4 +1,4 @@
 file-input
 ==========
 
-A better &lt;input type="file"> via Polymer
+A better &lt;input type="file">.
