@@ -16,7 +16,7 @@
 -->
 <link rel="import" href="bower_components/polymer/polymer.html">
 
-<polymer-element name="file-input" attributes="directory">
+<polymer-element name="file-input" attributes="directory maxFiles">
 
     <template>
     
@@ -45,24 +45,6 @@
 
     </template>
     
-    <script>
-        /* globals Polymer */
-        Polymer("file-input", {
-            changeHandler: function() {
-                this.files = Array.prototype.slice.call(this.$.fileInputInput.files);
-                this.fire("change", this.files);
-            },
-            
-            directory: false,
-            
-            files: [],
-            
-            ready: function() {
-                if (this.directory && this.$.fileInputInput.webkitdirectory !== undefined) {
-                    this.$.fileInputInput.setAttribute("webkitdirectory", "");
-                }
-            }
-        });
-    </script>
-    
+    <script src="file-input.js"></script>
+
 </polymer-element>
