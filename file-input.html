@@ -16,7 +16,7 @@
 -->
 <link rel="import" href="bower_components/polymer/polymer.html">
 
-<polymer-element name="file-input" attributes="directory maxFiles">
+<polymer-element name="file-input" attributes="accept directory maxFiles">
 
     <template>
     
@@ -41,7 +41,12 @@
         
         <content></content>
 
-        <input id="fileInputInput" type="file" on-change="{{changeHandler}}">
+        <input 
+            accept="{{accept}}" 
+            id="fileInputInput" 
+            on-change="{{changeHandler}}" 
+            type="file"
+        >
 
     </template>
     
