@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <script src="../bower_components/platform/platform.js"></script>
+        <link rel="import" href="../element/file-input.html">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    </head>
+
+    <body>
+        <file-input class="btn btn-primary" minSize="999999">Select a file</file-input>
+    </body>
+
+    <script>
+        document.querySelector("file-input").addEventListener("change", function(event) {
+            console.log(event.detail);
+        });
+    </script>
+</html>
