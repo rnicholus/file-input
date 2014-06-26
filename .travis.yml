@@ -1,0 +1,14 @@
+addons:
+  firefox: '30.0'
+language: node_js
+node_js:
+- '0.10'
+before_install:
+- npm install -g grunt-cli
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
+script:
+- grunt travis
+env:
+  global:
+    secure: E+UHUxpP/b6A8Xp6o7Ef8HzJbgVtVgA9x/3hTp9FLBB83NfR6p1JJmoSvCgo50iZ2jBk/ZpjKV+LfAoF6cigF5slsDXGVSKB3YDnlSQVZHe6YK9qlNPs+YvRco8TK2ZKT/AfV6GD50hqSPG6iOjbGLSIobqNTMYbjAM87CyFdvI=

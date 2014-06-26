@@ -22,7 +22,7 @@ module.exports = {
         ],
 
         preprocessors: {
-            "file-input.js": "coverage"
+            "element/*.js": "coverage"
         },
 
         reporters : [
