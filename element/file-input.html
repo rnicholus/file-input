@@ -1,15 +1,14 @@
 <!--
 /**
- * Fixes the browser's native `<input type="file">` by allow it to be easily 
+ * Fixes the browser's native `<input type="file">` by allow it to be easily
  * styled.  Also provides access to selected `File` object via a proper `Array`,
  * and not a `FileList`, which is a pseudo-array.  Selected `File` objects are
  * made available via a property on the custom element and via a custom event.
  *
  * Other conveniences include:
- * - non-vendor-prefixed directory selection 
- * - filtering via file extension
+ * - non-vendor-prefixed directory selection
+ * - many validation options
  * - the ability to "reset" the element (clear selected files, etc)
- * - allow camera access on mobile devices
  *
  * More features are likely to be added as requested.
  */
@@ -19,37 +18,37 @@
 <polymer-element name="file-input" attributes="accept directory extensions maxFiles maxSize minSize">
 
     <template>
-    
+
         <style>
             :host {
                 position: relative;
             }
-        
+
             #fileInputInput {
-                bottom: 0; 
-                height: 100%; 
-                left: 0; 
-                margin: 0; 
-                opacity: 0; 
-                padding: 0; 
+                bottom: 0;
+                height: 100%;
+                left: 0;
+                margin: 0;
+                opacity: 0;
+                padding: 0;
                 position: absolute;
-                right: 0; 
-                top: 0; 
-                width: 100%; 
+                right: 0;
+                top: 0;
+                width: 100%;
             }
         </style>
-        
+
         <content></content>
 
-        <input 
-            accept="{{accept}}" 
-            id="fileInputInput" 
-            on-change="{{changeHandler}}" 
+        <input
+            accept="{{accept}}"
+            id="fileInputInput"
+            on-change="{{changeHandler}}"
             type="file"
         >
 
     </template>
-    
+
     <script src="file-input.js"></script>
 
 </polymer-element>
