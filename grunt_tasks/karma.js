@@ -17,6 +17,7 @@ module.exports = {
         plugins : [
             "karma-coverage",
             "karma-coveralls",
+            "karma-firefox-launcher",
             "karma-jasmine",
             "karma-phantomjs-launcher",
             "karma-spec-reporter"
@@ -48,6 +49,6 @@ module.exports = {
         singleRun: false
     },
     travis: {
-        browsers: ["PhantomJS"]
+        browsers: ["PhantomJS", "Firefox"]
     }
 };
