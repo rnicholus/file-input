@@ -74,7 +74,7 @@ To allow any extension EXCEPT "jpeg" files:
 <file-input extensions='!["jpeg", "jpg"]'>Select Files</file-input>
 ```
 
-For information on accessing valid and invalid selected files, see the [API][#api] and [events][#events] sections.
+For information on accessing valid and invalid selected files, see the [API](#api) and [events](#events) sections.
 
 
 #### `maxFiles`
@@ -90,7 +90,7 @@ If you'd like to completely prevent users from selecting more than one file from
 <file-input maxFiles="1">Select Files</file-input>
 ```
 
-For information on accessing valid and invalid selected files, see the [API][#api] and [events][#events] sections.
+For information on accessing valid and invalid selected files, see the [API](#api) and [events](#events) sections.
 
 
 #### `maxSize` and `minSize`
@@ -102,8 +102,55 @@ For example, to only allow files that are 1000 bytes or greater but not greater 
 <file-input minSize="1000" maxSize="3000">Select Files</file-input>
 ```
 
-For information on accessing valid and invalid selected files, see the [API][#api] and [events][#events] sections.
+For information on accessing valid and invalid selected files, see the [API](#api) and [events](#events) sections.
 
 
+### API
+#### `files`
+To access an `Array` of `File` objects selected by your user that have also passed all validation checks, look to the `files` property.
+
+```javascript
+var validSelectedFiles = document.querySelector("file-input").files;
+```
+
+#### `invalidFiles`
+To access an `Object` containing keyed `Array`s of `File` objects, representing any files selected by your user that did **not** pass validation checks, inspect the `invalidFiles` property.  
+
+This is an object with a `count` property to easily determine how many invalid files exist.  Invalid files are grouped by reason.  For example, if there are 4 invalid files, one of each type: the value of the `invalidFiles` property would look like this:
+
+```javascript
+var invalidSelectedFiles = document.querySelector("file-input").invalidFiles;
+expect(invalidSelectedFiles).toEaual({
+    count: 4,
+    badExtension: [], // array containing the 1 file with a bad extension
+    tooBig: [], // array containing the 1 file with a file size that was too large
+    tooSmall: [], // array containing the 1 file with a file size that was too small
+    tooMany: [] // array containing any leftover otherwise valid files that exceed the number of allowable files
+});
+```
+
+#### `reset`
+To reset the `files` and `invalidFiles` cache on your element, use the `reset()` function:
+
+```javascript
+document.querySelector("file-input").reset();
+```
+
+### Events
+#### `change`
+When your user selects new files, a "change" event will be triggered on the element.  The `detail` property on the `event` passed to your handler will contain two properties: `valid` and `invalid`.  These correspond to the `files` and `invalidFiles` (respectively) properties on the element instance.
+
+```javascript
+document.querySelector("file-input").addEventListener(function(event) {
+    var validFiles = event.detail.valid,
+        invalidFiles = event.detail.invalid;
+        
+    // handle the event
+});
+```
+
+
+### Browser Support
+All [browsers supported by Polymer](http://www.polymer-project.org/resources/compatibility.html) are currently supported by `<file-input>`.  Polymer is a hard dependency.  
 
 When files are selected by the user, valid files will be made available via the `files` array on the element's instance, and via a `files` property on the triggered `change` event's `detail` object.  Invalid files will be made available via the `invalidFiles` property on the trigg
