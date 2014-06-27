@@ -10,8 +10,9 @@ A better `<input type="file">`.
 ### What's wrong with `<input type="file">`?
 
 1. It's difficult to skin/style as the look and feel of the element is mostly determined by the user agent.
-2. Access to the selected files are provided via `FileList` object, which is a pseudo-array (not a "real" array, with useful sugar like `forEach`, etc.
+2. Access to the selected files are provided via `FileList` object, which is a pseudo-array (not a "real" array, with useful sugar like `forEach`, etc).
 3. You want any sort of file validation?  Do it yourself!
+4. The API is lacking in many respects.
 
 
 **Now, a new, better, evolved (and evolving) element to take its place: `<file-input>`!**
@@ -141,7 +142,7 @@ document.querySelector("file-input").reset();
 When your user selects new files, a "change" event will be triggered on the element.  The `detail` property on the `event` passed to your handler will contain two properties: `valid` and `invalid`.  These correspond to the `files` and `invalidFiles` (respectively) properties on the element instance.
 
 ```javascript
-document.querySelector("file-input").addEventListener(function(event) {
+document.querySelector("file-input").addEventListener("change", function(event) {
     var validFiles = event.detail.valid,
         invalidFiles = event.detail.invalid;
         
