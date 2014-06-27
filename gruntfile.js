@@ -15,8 +15,9 @@ module.exports = function(grunt) {
     });
 
     grunt.loadNpmTasks("grunt-contrib-jshint");
+    grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-karma");
 
-    grunt.registerTask("default", ["jshint", "karma:dev"]);
+    grunt.registerTask("default", ["jshint", "karma:dev", "watch"]);
     grunt.registerTask("travis", ["jshint", "karma:travis"]);
 };

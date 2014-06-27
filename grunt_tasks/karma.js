@@ -18,7 +18,8 @@ module.exports = {
             "karma-coverage",
             "karma-coveralls",
             "karma-jasmine",
-            "karma-phantomjs-launcher"
+            "karma-phantomjs-launcher",
+            "karma-spec-reporter"
         ],
 
         preprocessors: {
@@ -26,7 +27,7 @@ module.exports = {
         },
 
         reporters : [
-            "dots",
+            "spec",
             "coverage",
             "coveralls"
         ],
