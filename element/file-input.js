@@ -122,6 +122,10 @@
             if (this.directory && this.$.fileInputInput.webkitdirectory !== undefined) {
                 this.$.fileInputInput.setAttribute("webkitdirectory", "");
             }
+        },
+
+        reset: function() {
+            this.created();
         }
     });
 }());
