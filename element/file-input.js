@@ -87,7 +87,7 @@
                 invalid.count += sizeValidationResult.tooSmall.length;
             }
             if (extensionValidationResult.invalid.length) {
-                invalid.badExtensions = extensionValidationResult.invalid;
+                invalid.badExtension = extensionValidationResult.invalid;
                 invalid.count += extensionValidationResult.invalid.length;
             }
             if (countLimitValidationResult.invalid.length) {
