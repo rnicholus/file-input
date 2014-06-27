@@ -48,7 +48,7 @@ Any text or elments that you would like to appear on the button can be defined a
 #### `accept`
 If you want to restrict the types of files that the file chooser will allow your user's to select, you can make use of an `accept` attribute, passing one or more MIME types as comma-separated values.  Please note that [browser support for this attribute is very poor and implementations vary wildly](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#Browser_compatibility).  
 
-For example, to allow allow your users to select images and videos:  
+For example, to only allow your users to select images and videos:  
 ```html
 <file-input accept="image/*,video/*">Select Files</file-input>
 ```
