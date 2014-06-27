@@ -19,6 +19,12 @@ describe("file-input custom element tests", function() {
     });
 
     describe("initialization tests", function() {
+        it("initializes objects & arrays in the 'created' callbakc", function() {
+            polymerInstance.spec.created.call(this.customElementInstance);
+            expect(this.customElementInstance.files).toEqual([]);
+            expect(this.customElementInstance.invalidFiles).toEqual({count: 0});
+        });
+        
         it("doesn't set the multiple attr if maxFiles === 1", function() {
             this.customElementInstance.maxFiles = 1;
             polymerInstance.spec.ready.call(this.customElementInstance);
