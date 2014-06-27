@@ -5,7 +5,7 @@
     "Ray Nicholus"
   ],
   "description": "polymer element for styling, normalizing, and generally fixing <input type=\"file\">",
-  "main": "file-input.html",
+  "main": "element/*",
   "license": "MIT",
   "ignore": [
     "**/.*",
