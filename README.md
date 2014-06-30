@@ -152,6 +152,4 @@ document.querySelector("file-input").addEventListener("change", function(event) 
 
 
 ### Browser Support
-All [browsers supported by Polymer](http://www.polymer-project.org/resources/compatibility.html) are currently supported by `<file-input>`.  Polymer is a hard dependency.  
-
-When files are selected by the user, valid files will be made available via the `files` array on the element's instance, and via a `files` property on the triggered `change` event's `detail` object.  Invalid files will be made available via the `invalidFiles` property on the trigg
+All [browsers supported by Polymer](http://www.polymer-project.org/resources/compatibility.html) are currently supported by `<file-input>`.  Polymer is a hard dependency.
