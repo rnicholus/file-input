@@ -10,8 +10,9 @@ A better `<input type="file">`.
 ### What's wrong with `<input type="file">`?
 
 1. It's difficult to skin/style as the look and feel of the element is mostly determined by the user agent.
-2. Access to the selected files are provided via `FileList` object, which is a pseudo-array (not a "real" array, with useful sugar like `forEach`, etc.
+2. Access to the selected files are provided via `FileList` object, which is a pseudo-array (not a "real" array, with useful sugar like `forEach`, etc).
 3. You want any sort of file validation?  Do it yourself!
+4. The API is lacking in many respects.
 
 
 **Now, a new, better, evolved (and evolving) element to take its place: `<file-input>`!**
@@ -47,7 +48,7 @@ Any text or elments that you would like to appear on the button can be defined a
 #### `accept`
 If you want to restrict the types of files that the file chooser will allow your user's to select, you can make use of an `accept` attribute, passing one or more MIME types as comma-separated values.  Please note that [browser support for this attribute is very poor and implementations vary wildly](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/Input#Browser_compatibility).  
 
-For example, to allow allow your users to select images and videos:  
+For example, to only allow your users to select images and videos:  
 ```html
 <file-input accept="image/*,video/*">Select Files</file-input>
 ```
@@ -141,7 +142,7 @@ document.querySelector("file-input").reset();
 When your user selects new files, a "change" event will be triggered on the element.  The `detail` property on the `event` passed to your handler will contain two properties: `valid` and `invalid`.  These correspond to the `files` and `invalidFiles` (respectively) properties on the element instance.
 
 ```javascript
-document.querySelector("file-input").addEventListener(function(event) {
+document.querySelector("file-input").addEventListener("change", function(event) {
     var validFiles = event.detail.valid,
         invalidFiles = event.detail.invalid;
         
@@ -151,6 +152,4 @@ document.querySelector("file-input").addEventListener(function(event) {
 
 
 ### Browser Support
-All [browsers supported by Polymer](http://www.polymer-project.org/resources/compatibility.html) are currently supported by `<file-input>`.  Polymer is a hard dependency.  
-
-When files are selected by the user, valid files will be made available via the `files` array on the element's instance, and via a `files` property on the triggered `change` event's `detail` object.  Invalid files will be made available via the `invalidFiles` property on the trigg
+All [browsers supported by Polymer](http://www.polymer-project.org/resources/compatibility.html) are currently supported by `<file-input>`.  Polymer is a hard dependency.
