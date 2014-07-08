@@ -51,11 +51,19 @@
         var valid = event.detail.valid,
             invalid = event.detail.invalid,
             validFilesEl = document.getElementById('validFiles'),
-            invalidFilesEl = document.getElementById('invalidFiles');
+            validFiles = [],
+            invalidFilesEl = document.getElementById('invalidFiles'),
+            invalidFiles = {};
         
         if (valid.length) {
+            validFiles = valid.map(function(file) {
+                return {
+                    name: file.name,
+                    size: file.size
+                };
+            });
             validFilesEl.className = 'pre'
-            validFilesEl.innerHTML = JSON.stringify(valid, null, 3);
+            validFilesEl.innerHTML = JSON.stringify(validFiles, null, 3);
         }
         else {
             validFilesEl.className = ''
@@ -63,8 +71,18 @@
         }
 
         if (invalid.count) {
+            Object.keys(invalid).forEach(function(key) {
+                if (key !== 'count') {
+                    invalidFiles[key] = invalid[key].map(function(file) {
+                        return {
+                            name: file.name,
+                            size: file.size
+                        };    
+                    });
+                }    
+            });
             invalidFilesEl.className = 'pre'
-            invalidFilesEl.innerHTML = JSON.stringify(invalid, null, 3);
+            invalidFilesEl.innerHTML = JSON.stringify(invalidFiles, null, 3);
         }
         else {
             invalidFilesEl.className = ''
