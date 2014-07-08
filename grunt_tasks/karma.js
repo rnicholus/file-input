@@ -7,8 +7,7 @@ module.exports = {
         basePath : ".",
 
         files : [
-            "test/unit/polymer-mock.js",
-            "element/*.js",
+            "file-input.js",
             "test/unit/*-spec.js"
         ],
 
@@ -24,7 +23,7 @@ module.exports = {
         ],
 
         preprocessors: {
-            "element/*.js": "coverage"
+            "file-input.js": "coverage"
         },
 
         reporters : [
@@ -43,10 +42,6 @@ module.exports = {
     },
     dev: {
         browsers: ["PhantomJS"]
-    },
-    server: {
-        hostname: "outrun-altoun.codio.io",
-        singleRun: false
     },
     travis: {
         browsers: ["PhantomJS", "Firefox"]

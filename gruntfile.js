@@ -7,17 +7,12 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON("package.json"),
         jshint: config("jshint"),
-        karma: config("karma"),
-        watch: {
-            files: ["element/*", "grunt_tasks/*.js", "test/unit/*"],
-            tasks: ["jshint", "karma:dev"]
-        }
+        karma: config("karma")
     });
 
     grunt.loadNpmTasks("grunt-contrib-jshint");
-    grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-karma");
 
-    grunt.registerTask("default", ["jshint", "karma:dev", "watch"]);
+    grunt.registerTask("default", ["jshint", "karma:dev"]);
     grunt.registerTask("travis", ["jshint", "karma:travis"]);
 };

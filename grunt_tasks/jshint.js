@@ -2,7 +2,7 @@
 /* globals module */
 module.exports = {
     files: [
-        "element/*.js",
+        "file-input.js",
         "gruntfile.js",
         "grunt_tasks/*.js",
         "test/unit/*.js"

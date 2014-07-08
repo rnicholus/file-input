@@ -7,7 +7,6 @@
     "devDependencies": {
         "grunt": "0.4.x",
         "grunt-contrib-jshint": "0.10.x",
-        "grunt-contrib-watch": "0.6.x",
         "grunt-karma": "~0.8.2",
         "karma": "~0.12.0",
         "karma-coverage": "0.2.x",
@@ -23,5 +22,5 @@
         "type" : "git",
         "url" : "https://github.com/garstasio/file-input.git"
     },
-    "version": "0.1.0"
+    "version": "0.2.0"
 }

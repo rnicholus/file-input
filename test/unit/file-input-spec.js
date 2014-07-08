@@ -1,4 +1,4 @@
-/* globals polymerInstance */
+/* globals fileInput */
 describe("file-input custom element tests", function() {
     beforeEach(function() {
         // Doesn't really matter what type of element we use
@@ -20,52 +20,52 @@ describe("file-input custom element tests", function() {
 
     describe("initialization tests", function() {
         it("initializes objects & arrays in the 'created' callbakc", function() {
-            polymerInstance.spec.created.call(this.customElementInstance);
+            fileInput.created.call(this.customElementInstance);
             expect(this.customElementInstance.files).toEqual([]);
             expect(this.customElementInstance.invalidFiles).toEqual({count: 0});
         });
 
         it("doesn't set the multiple attr if maxFiles === 1", function() {
             this.customElementInstance.maxFiles = 1;
-            polymerInstance.spec.ready.call(this.customElementInstance);
+            fileInput.ready.call(this.customElementInstance);
             expect(this.fileInputEl.hasAttribute("multiple")).toBeFalsy();
         });
 
         it("does set the multiple attr if maxFiles === 0", function() {
             this.customElementInstance.maxFiles = 0;
-            polymerInstance.spec.ready.call(this.customElementInstance);
+            fileInput.ready.call(this.customElementInstance);
             expect(this.fileInputEl.hasAttribute("multiple")).toBeTruthy();
         });
 
         it("does set the multiple attr if maxFiles > 1", function() {
             this.customElementInstance.maxFiles = 2;
-            polymerInstance.spec.ready.call(this.customElementInstance);
+            fileInput.ready.call(this.customElementInstance);
             expect(this.fileInputEl.hasAttribute("multiple")).toBeTruthy();
         });
 
         it("enables directory selection only if requested & supported by UA", function() {
-            polymerInstance.spec.ready.call(this.customElementInstance);
+            fileInput.ready.call(this.customElementInstance);
             expect(this.fileInputEl.hasAttribute("webkitdirectory")).toBeFalsy();
 
             this.customElementInstance.$.fileInputInput.webkitdirectory = false;
-            polymerInstance.spec.ready.call(this.customElementInstance);
+            fileInput.ready.call(this.customElementInstance);
             expect(this.fileInputEl.hasAttribute("webkitdirectory")).toBeFalsy();
 
             this.customElementInstance.directory = true;
-            polymerInstance.spec.ready.call(this.customElementInstance);
+            fileInput.ready.call(this.customElementInstance);
             expect(this.fileInputEl.hasAttribute("webkitdirectory")).toBeTruthy();
         });
     });
 
     describe("reset tests", function() {
         it("resets the file arrays on reset", function() {
-            polymerInstance.spec.files = [1,2,3];
-            polymerInstance.spec.invalidFiles = {count: 1, tooBig: [4]};
+            fileInput.files = [1,2,3];
+            fileInput.invalidFiles = {count: 1, tooBig: [4]};
 
-            polymerInstance.spec.reset();
+            fileInput.reset();
 
-            expect(polymerInstance.spec.files).toEqual([]);
-            expect(polymerInstance.spec.invalidFiles).toEqual({count: 0});
+            expect(fileInput.files).toEqual([]);
+            expect(fileInput.invalidFiles).toEqual({count: 0});
         });
     });
 
@@ -83,7 +83,7 @@ describe("file-input custom element tests", function() {
             };
 
             spyOn(this.customElementInstance, "fire");
-            polymerInstance.spec.changeHandler.call(this.customElementInstance);
+            fileInput.changeHandler.call(this.customElementInstance);
 
             expect(this.customElementInstance.fire).toHaveBeenCalledWith("change", {invalid: {count: 0}, valid: expectedValid});
             expect(this.customElementInstance.files).toEqual(expectedValid);
@@ -114,7 +114,7 @@ describe("file-input custom element tests", function() {
 
             this.customElementInstance.maxSize = 2500;
             this.customElementInstance.minSize = 1500;
-            polymerInstance.spec.changeHandler.call(this.customElementInstance);
+            fileInput.changeHandler.call(this.customElementInstance);
 
             expect(this.customElementInstance.files).toEqual(expectedValid);
             expect(this.customElementInstance.invalidFiles).toEqual(expectedInvalid);
@@ -141,7 +141,7 @@ describe("file-input custom element tests", function() {
 
             /* jshint quotmark:false */
             this.customElementInstance.extensions = '["jpg"]';
-            polymerInstance.spec.changeHandler.call(this.customElementInstance);
+            fileInput.changeHandler.call(this.customElementInstance);
 
             expect(this.customElementInstance.files).toEqual(expectedValid);
             expect(this.customElementInstance.invalidFiles).toEqual(expectedInvalid);
@@ -168,7 +168,7 @@ describe("file-input custom element tests", function() {
 
             /* jshint quotmark:false */
             this.customElementInstance.extensions = '!["jpg"]';
-            polymerInstance.spec.changeHandler.call(this.customElementInstance);
+            fileInput.changeHandler.call(this.customElementInstance);
 
             expect(this.customElementInstance.files).toEqual(expectedValid);
             expect(this.customElementInstance.invalidFiles).toEqual(expectedInvalid);
@@ -195,7 +195,7 @@ describe("file-input custom element tests", function() {
 
             /* jshint quotmark:false */
             this.customElementInstance.maxFiles = 1;
-            polymerInstance.spec.changeHandler.call(this.customElementInstance);
+            fileInput.changeHandler.call(this.customElementInstance);
 
             expect(this.customElementInstance.files).toEqual(expectedValid);
             expect(this.customElementInstance.invalidFiles).toEqual(expectedInvalid);
@@ -240,7 +240,7 @@ describe("file-input custom element tests", function() {
             this.customElementInstance.extensions = '["jpg"]';
             this.customElementInstance.maxFiles = 3;
             this.customElementInstance.maxSize = 8000;
-            polymerInstance.spec.changeHandler.call(this.customElementInstance);
+            fileInput.changeHandler.call(this.customElementInstance);
 
             expect(this.customElementInstance.files).toEqual(expectedValid);
             expect(this.customElementInstance.invalidFiles).toEqual(expectedInvalid);

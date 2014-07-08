@@ -66,9 +66,7 @@
         };
 
 
-    /* globals Polymer */
-    /* jshint newcap: false */
-    Polymer("file-input", {
+   this.fileInput = {
         changeHandler: function() {
             var files = Array.prototype.slice.call(this.$.fileInputInput.files),
                 invalid = {count: 0},
@@ -127,5 +125,5 @@
         reset: function() {
             this.created();
         }
-    });
+    };
 }());
