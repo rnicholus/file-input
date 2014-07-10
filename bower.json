@@ -1,6 +1,6 @@
 {
   "name": "file-input",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "authors": [
     "Ray Nicholus"
   ],
@@ -14,7 +14,7 @@
     "test",
     "tests"
   ],
-    "keywords": ["web-components", "input", "file", "upload"],
+    "keywords": ["Polymer", "web-components", "input", "file", "upload"],
   "dependencies": {
     "polymer": "Polymer/polymer#~0.3.3"
   }
