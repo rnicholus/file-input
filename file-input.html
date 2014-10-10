@@ -61,7 +61,7 @@ that all of your HTML imports are concatenated into one file.__
         * When your user selects new files, a "change" event will be triggered 
         * on the element.  The `detail` property on the `event` passed to your 
         * handler will contain two properties: `valid` and `invalid`.  
-        * These correspond to the `files` and `invalidFiles` (respectively) 
+        * These correspond to the `files` and `invalid` (respectively) 
         * properties on the element instance.
         *
         *     fileInputEl.addEventListener("change", 
@@ -89,14 +89,14 @@ that all of your HTML imports are concatenated into one file.__
         /**
         * To access an `Object` containing keyed `Array`s of `File` objects, 
         * representing any files selected by your user that did **not** 
-        * pass validation checks, inspect the `invalidFiles` property.  
+        * pass validation checks, inspect the `invalid` property.  
         *
         * This is an object with a `count` property to easily determine how 
         * many invalid files exist.  Invalid files are grouped by reason.  
         * For example, if there are 4 invalid files, one of each type: 
-        * the value of the `invalidFiles` property would look like this:
+        * the value of the `invalid` property would look like this:
         *
-        *     var invalidFiles = fileInputEl.invalidFiles;
+        *     var invalidFiles = fileInputEl.invalid;
         * 
         *     expect(invalidFiles).toEqual({
         *         count: 4,
@@ -120,13 +120,13 @@ that all of your HTML imports are concatenated into one file.__
         *     });
         *
         * 
-        * @property invalidFiles
+        * @property invalid
         * @type Object
         * @default {count: 0}
         */
 
         /**
-         * To reset the `files` and `invalidFiles` cache and also reset the
+         * To reset the `files` and `invalid` cache and also reset the
          * underlying `<input type="file">`, use the `reset()` function:
          *
          *     document.querySelector("file-input").reset();

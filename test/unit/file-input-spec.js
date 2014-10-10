@@ -22,7 +22,7 @@ describe("file-input custom element tests", function() {
         it("initializes objects & arrays in the 'created' callbakc", function() {
             fileInput.created.call(this.customElementInstance);
             expect(this.customElementInstance.files).toEqual([]);
-            expect(this.customElementInstance.invalidFiles).toEqual({count: 0});
+            expect(this.customElementInstance.invalid).toEqual({count: 0});
         });
 
         it("doesn't set the multiple attr if maxFiles === 1", function() {
@@ -60,7 +60,7 @@ describe("file-input custom element tests", function() {
     describe("reset tests", function() {
         it("resets the file arrays on reset", function() {
             fileInput.files = [1,2,3];
-            fileInput.invalidFiles = {count: 1, tooBig: [4]};
+            fileInput.invalid = {count: 1, tooBig: [4]};
 
             var div = document.createElement("div");
             div.appendChild(this.customElementInstance.$.fileInputInput);
@@ -72,7 +72,7 @@ describe("file-input custom element tests", function() {
             fileInput.reset.call(this.customElementInstance);
 
             expect(fileInput.files).toEqual([]);
-            expect(fileInput.invalidFiles).toEqual({count: 0});
+            expect(fileInput.invalid).toEqual({count: 0});
         });
     });
 
@@ -94,7 +94,7 @@ describe("file-input custom element tests", function() {
 
             expect(this.customElementInstance.fire).toHaveBeenCalledWith("change", {invalid: {count: 0}, valid: expectedValid});
             expect(this.customElementInstance.files).toEqual(expectedValid);
-            expect(this.customElementInstance.invalidFiles).toEqual({count: 0});
+            expect(this.customElementInstance.invalid).toEqual({count: 0});
          });
 
          it("rejects files that are too big or too small", function() {
@@ -124,7 +124,7 @@ describe("file-input custom element tests", function() {
             fileInput.changeHandler.call(this.customElementInstance);
 
             expect(this.customElementInstance.files).toEqual(expectedValid);
-            expect(this.customElementInstance.invalidFiles).toEqual(expectedInvalid);
+            expect(this.customElementInstance.invalid).toEqual(expectedInvalid);
          });
 
          it("rejects files with an invalid extension", function() {
@@ -151,7 +151,7 @@ describe("file-input custom element tests", function() {
             fileInput.changeHandler.call(this.customElementInstance);
 
             expect(this.customElementInstance.files).toEqual(expectedValid);
-            expect(this.customElementInstance.invalidFiles).toEqual(expectedInvalid);
+            expect(this.customElementInstance.invalid).toEqual(expectedInvalid);
          });
 
          it("rejects files with an invalid extension (negated)", function() {
@@ -178,7 +178,7 @@ describe("file-input custom element tests", function() {
             fileInput.changeHandler.call(this.customElementInstance);
 
             expect(this.customElementInstance.files).toEqual(expectedValid);
-            expect(this.customElementInstance.invalidFiles).toEqual(expectedInvalid);
+            expect(this.customElementInstance.invalid).toEqual(expectedInvalid);
          });
 
           it("rejects files passed the maxFiles limit", function() {
@@ -205,7 +205,7 @@ describe("file-input custom element tests", function() {
             fileInput.changeHandler.call(this.customElementInstance);
 
             expect(this.customElementInstance.files).toEqual(expectedValid);
-            expect(this.customElementInstance.invalidFiles).toEqual(expectedInvalid);
+            expect(this.customElementInstance.invalid).toEqual(expectedInvalid);
          });
 
          it("respects all validation rules at once in the proper order", function() {
@@ -250,7 +250,7 @@ describe("file-input custom element tests", function() {
             fileInput.changeHandler.call(this.customElementInstance);
 
             expect(this.customElementInstance.files).toEqual(expectedValid);
-            expect(this.customElementInstance.invalidFiles).toEqual(expectedInvalid);
+            expect(this.customElementInstance.invalid).toEqual(expectedInvalid);
          });
     });
 });

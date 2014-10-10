@@ -119,7 +119,7 @@
 
             valid = countLimitValidationResult.valid;
 
-            this.invalidFiles = invalid;
+            this.invalid = invalid;
             this.files = valid;
 
             this.fire("change", {invalid: invalid, valid: valid});
@@ -127,7 +127,7 @@
 
         created: function() {
             this.files = [];
-            this.invalidFiles = {count: 0};
+            this.invalid = {count: 0};
         },
 
         maxFiles: 0,
