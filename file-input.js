@@ -63,6 +63,30 @@
             });
 
             return {tooBig: tooBig, tooSmall: tooSmall, valid: valid};
+        },
+        
+        // This is the only way (I am aware of) to reset an `<input type="file">` 
+        // without removing it from the DOM.  Removing it disconnects it 
+        // from the CE/Polymer.
+        resetInput = function() {
+            // create a form with a hidden reset button
+            var tempForm = document.createElement("form"),
+                tempResetButton = document.createElement("button");
+           
+            tempResetButton.setAttribute("type", "reset");
+            tempResetButton.style.display = "none";
+            tempForm.appendChild(tempResetButton);
+
+            // temporarily move the `<input type="file">` into the form & add form to DOM            
+            this.$.fileInputInput.parentNode.insertBefore(tempForm, this.$.fileInputInput);
+            tempForm.appendChild(this.$.fileInputInput);
+            
+            // reset the `<input type="file">`
+            tempResetButton.click();
+            
+            // move the `<input type="file">` back to its original spot & remove form
+            tempForm.parentNode.appendChild(this.$.fileInputInput);
+            tempForm.parentNode.removeChild(tempForm);
         };
 
 
@@ -124,6 +148,7 @@
 
         reset: function() {
             this.created();
+            resetInput.call(this);
         }
     };
 }());

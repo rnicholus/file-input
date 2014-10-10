@@ -62,7 +62,14 @@ describe("file-input custom element tests", function() {
             fileInput.files = [1,2,3];
             fileInput.invalidFiles = {count: 1, tooBig: [4]};
 
-            fileInput.reset();
+            var div = document.createElement("div");
+            div.appendChild(this.customElementInstance.$.fileInputInput);
+
+            this.customElementInstance.created = function() {
+                fileInput.created.call(fileInput);
+            };
+
+            fileInput.reset.call(this.customElementInstance);
 
             expect(fileInput.files).toEqual([]);
             expect(fileInput.invalidFiles).toEqual({count: 0});
