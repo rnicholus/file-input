@@ -50,6 +50,7 @@
         "describe",
         "document",
         "expect",
+        "navigator",
         "FrameGrab",
         "it",
         "RSVP",

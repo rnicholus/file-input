@@ -19,7 +19,7 @@ describe("file-input custom element tests", function() {
     });
 
     describe("initialization tests", function() {
-        it("initializes objects & arrays in the 'created' callbakc", function() {
+        it("initializes objects & arrays in the 'created' callba", function() {
             fileInput.created.call(this.customElementInstance);
             expect(this.customElementInstance.files).toEqual([]);
             expect(this.customElementInstance.invalid).toEqual({count: 0});

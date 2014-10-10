@@ -16,6 +16,6 @@
   ],
     "keywords": ["Polymer", "web-components", "input", "file", "upload"],
   "dependencies": {
-    "polymer": "Polymer/polymer#~0.3.3"
+    "polymer": "Polymer/polymer#~0.4.2"
   }
 }

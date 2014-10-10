@@ -22,7 +22,7 @@ that all of your HTML imports are concatenated into one file.__
 @homepage index.html
 -->
 
-<polymer-element name="file-input" attributes="accept directory extensions maxFiles maxSize minSize">
+<polymer-element name="file-input" attributes="accept camera directory extensions maxFiles maxSize minSize">
 
     <template>
 
@@ -150,6 +150,21 @@ that all of your HTML imports are concatenated into one file.__
          * @type string
          */
          
+         /**
+          * This is currently an iOS-specific attribute, as there are a few
+          * attributes on the underlying `<input type="file">` element that must
+          * be setup in order to allow camera access on Apple mobile devices.
+          * `<file-input>` is smart enough to only apply these settings when
+          * neceessary (only when the device is running iOS), so including this
+          * property on other devices is essentially a NOP.
+          * 
+          *     <file-input camera>
+          *         Select Files
+          *     </file-input>
+          *
+          * @attribute camera
+          */
+
          /**
           * Some browsers (currently only Chrome and Opera) allow you to 
           * select folders for upload.  To turn on this feature (ignored 

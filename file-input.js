@@ -64,26 +64,32 @@
 
             return {tooBig: tooBig, tooSmall: tooSmall, valid: valid};
         },
-        
-        // This is the only way (I am aware of) to reset an `<input type="file">` 
-        // without removing it from the DOM.  Removing it disconnects it 
+
+        isIos = function() {
+            return navigator.userAgent.indexOf("iPad") !== -1 || 
+                navigator.userAgent.indexOf("iPod") !== -1 || 
+                navigator.userAgent.indexOf("iPhone") !== -1;
+        },
+
+        // This is the only way (I am aware of) to reset an `<input type="file">`
+        // without removing it from the DOM.  Removing it disconnects it
         // from the CE/Polymer.
         resetInput = function() {
             // create a form with a hidden reset button
             var tempForm = document.createElement("form"),
                 tempResetButton = document.createElement("button");
-           
+
             tempResetButton.setAttribute("type", "reset");
             tempResetButton.style.display = "none";
             tempForm.appendChild(tempResetButton);
 
-            // temporarily move the `<input type="file">` into the form & add form to DOM            
+            // temporarily move the `<input type="file">` into the form & add form to DOM
             this.$.fileInputInput.parentNode.insertBefore(tempForm, this.$.fileInputInput);
             tempForm.appendChild(this.$.fileInputInput);
-            
+
             // reset the `<input type="file">`
             tempResetButton.click();
-            
+
             // move the `<input type="file">` back to its original spot & remove form
             tempForm.parentNode.appendChild(this.$.fileInputInput);
             tempForm.parentNode.removeChild(tempForm);
@@ -135,8 +141,20 @@
         maxSize: 0,
 
         minSize: 0,
-
+        
         ready: function() {
+            if (this.camera != null && isIos()) {
+                this.maxFiles = 1;
+
+                var iosCameraAccept = "image/*;capture=camera";
+                if (this.accept && this.accept.length.trim().length > 0) {
+                    this.accept += "," + iosCameraAccept;
+                }
+                else {
+                    this.accept = iosCameraAccept;
+                }
+            }
+
             if (this.maxFiles !== 1) {
                 this.$.fileInputInput.setAttribute("multiple", "");
             }
