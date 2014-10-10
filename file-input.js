@@ -159,7 +159,7 @@
                 this.$.fileInputInput.setAttribute("multiple", "");
             }
 
-            if (this.directory && this.$.fileInputInput.webkitdirectory !== undefined) {
+            if (this.directory != null && this.$.fileInputInput.webkitdirectory !== undefined) {
                 this.$.fileInputInput.setAttribute("webkitdirectory", "");
             }
         },
