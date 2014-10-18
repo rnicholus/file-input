@@ -101,34 +101,39 @@
             var files = Array.prototype.slice.call(this.$.fileInputInput.files),
                 invalid = {count: 0},
                 valid = [];
-
-            var sizeValidationResult = getResultOfSizeValidation(this.minSize, this.maxSize, files);
-            var extensionValidationResult = getResultOfExtensionsValidation(this.extensions, sizeValidationResult.valid);
-            var countLimitValidationResult = getResultOfCountLimitValidation(this.maxFiles, extensionValidationResult.valid);
-
-            if (sizeValidationResult.tooBig.length) {
-                invalid.tooBig = sizeValidationResult.tooBig;
-                invalid.count += sizeValidationResult.tooBig.length;
+            
+            // Some browsers may fire a change event when the file chooser 
+            // dialog is closed via cancel button.  In this case, the 
+            //files array will be empty and the event should be ignored.
+            if (files.length) {
+                var sizeValidationResult = getResultOfSizeValidation(this.minSize, this.maxSize, files);
+                var extensionValidationResult = getResultOfExtensionsValidation(this.extensions, sizeValidationResult.valid);
+                var countLimitValidationResult = getResultOfCountLimitValidation(this.maxFiles, extensionValidationResult.valid);
+    
+                if (sizeValidationResult.tooBig.length) {
+                    invalid.tooBig = sizeValidationResult.tooBig;
+                    invalid.count += sizeValidationResult.tooBig.length;
+                }
+                if (sizeValidationResult.tooSmall.length) {
+                    invalid.tooSmall = sizeValidationResult.tooSmall;
+                    invalid.count += sizeValidationResult.tooSmall.length;
+                }
+                if (extensionValidationResult.invalid.length) {
+                    invalid.badExtension = extensionValidationResult.invalid;
+                    invalid.count += extensionValidationResult.invalid.length;
+                }
+                if (countLimitValidationResult.invalid.length) {
+                    invalid.tooMany = countLimitValidationResult.invalid;
+                    invalid.count += countLimitValidationResult.invalid.length;
+                }
+    
+                valid = countLimitValidationResult.valid;
+    
+                this.invalid = invalid;
+                this.files = valid;
+    
+                this.fire("change", {invalid: invalid, valid: valid});
             }
-            if (sizeValidationResult.tooSmall.length) {
-                invalid.tooSmall = sizeValidationResult.tooSmall;
-                invalid.count += sizeValidationResult.tooSmall.length;
-            }
-            if (extensionValidationResult.invalid.length) {
-                invalid.badExtension = extensionValidationResult.invalid;
-                invalid.count += extensionValidationResult.invalid.length;
-            }
-            if (countLimitValidationResult.invalid.length) {
-                invalid.tooMany = countLimitValidationResult.invalid;
-                invalid.count += countLimitValidationResult.invalid.length;
-            }
-
-            valid = countLimitValidationResult.valid;
-
-            this.invalid = invalid;
-            this.files = valid;
-
-            this.fire("change", {invalid: invalid, valid: valid});
         },
 
         created: function() {

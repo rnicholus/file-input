@@ -97,6 +97,18 @@ describe("file-input custom element tests", function() {
             expect(this.customElementInstance.invalid).toEqual({count: 0});
          });
 
+         it("ignores native change event if no files were selected", function() {
+            this.customElementInstance.files = [1, 2];
+
+            this.customElementInstance.$.fileInputInput.files = {length: 0};
+
+            spyOn(this.customElementInstance, "fire");
+            fileInput.changeHandler.call(this.customElementInstance);
+
+            expect(this.customElementInstance.fire).not.toHaveBeenCalled();
+            expect(this.customElementInstance.files).toEqual([1, 2]);
+         });
+
          it("rejects files that are too big or too small", function() {
             var expectedValid = [
                     {name: "plain.txt", size: 2000}
