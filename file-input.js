@@ -66,8 +66,8 @@
         },
 
         isIos = function() {
-            return navigator.userAgent.indexOf("iPad") !== -1 || 
-                navigator.userAgent.indexOf("iPod") !== -1 || 
+            return navigator.userAgent.indexOf("iPad") !== -1 ||
+                navigator.userAgent.indexOf("iPod") !== -1 ||
                 navigator.userAgent.indexOf("iPhone") !== -1;
         },
 
@@ -93,7 +93,37 @@
             // move the `<input type="file">` back to its original spot & remove form
             tempForm.parentNode.appendChild(this.$.fileInputInput);
             tempForm.parentNode.removeChild(tempForm);
-        };
+
+            updateValidity.call(this);
+        },
+
+        setupValidationTarget = function() {
+            validationTarget = document.createElement('input');
+            validationTarget.setAttribute('type', 'text');
+
+            validationTarget.style.width = 0;
+            validationTarget.style.height = 0;
+            validationTarget.style.opacity = 0;
+            
+            validationTarget.customElementRef = this;
+
+            this.parentNode.insertBefore(validationTarget, this);
+
+            updateValidity.call(this);
+        },
+
+        updateValidity = function() {
+            if (validationTarget) {
+                if (this.files.length) {
+                    validationTarget.setCustomValidity("");
+                }
+                else {
+                    validationTarget.setCustomValidity(this.invalidText);
+                }
+            }
+        },
+
+        validationTarget;
 
 
    this.fileInput = {
@@ -101,15 +131,15 @@
             var files = Array.prototype.slice.call(this.$.fileInputInput.files),
                 invalid = {count: 0},
                 valid = [];
-            
-            // Some browsers may fire a change event when the file chooser 
-            // dialog is closed via cancel button.  In this case, the 
+
+            // Some browsers may fire a change event when the file chooser
+            // dialog is closed via cancel button.  In this case, the
             //files array will be empty and the event should be ignored.
             if (files.length) {
                 var sizeValidationResult = getResultOfSizeValidation(this.minSize, this.maxSize, files);
                 var extensionValidationResult = getResultOfExtensionsValidation(this.extensions, sizeValidationResult.valid);
                 var countLimitValidationResult = getResultOfCountLimitValidation(this.maxFiles, extensionValidationResult.valid);
-    
+
                 if (sizeValidationResult.tooBig.length) {
                     invalid.tooBig = sizeValidationResult.tooBig;
                     invalid.count += sizeValidationResult.tooBig.length;
@@ -126,12 +156,13 @@
                     invalid.tooMany = countLimitValidationResult.invalid;
                     invalid.count += countLimitValidationResult.invalid.length;
                 }
-    
+
                 valid = countLimitValidationResult.valid;
-    
+
                 this.invalid = invalid;
                 this.files = valid;
-    
+
+                updateValidity.call(this);
                 this.fire("change", {invalid: invalid, valid: valid});
             }
         },
@@ -141,13 +172,15 @@
             this.invalid = {count: 0};
         },
 
+        invalidText: "No valid files selected.",
+
         maxFiles: 0,
 
         maxSize: 0,
 
         minSize: 0,
-        
-        ready: function() {
+
+        domReady: function() {
             if (this.camera != null && isIos()) {
                 this.maxFiles = 1;
 
@@ -166,6 +199,10 @@
 
             if (this.directory != null && this.$.fileInputInput.webkitdirectory !== undefined) {
                 this.$.fileInputInput.setAttribute("webkitdirectory", "");
+            }
+
+            if (this.required != null) {
+                setupValidationTarget.call(this);
             }
         },
 

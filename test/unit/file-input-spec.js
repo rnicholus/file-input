@@ -27,32 +27,32 @@ describe("file-input custom element tests", function() {
 
         it("doesn't set the multiple attr if maxFiles === 1", function() {
             this.customElementInstance.maxFiles = 1;
-            fileInput.ready.call(this.customElementInstance);
+            fileInput.domReady.call(this.customElementInstance);
             expect(this.fileInputEl.hasAttribute("multiple")).toBeFalsy();
         });
 
         it("does set the multiple attr if maxFiles === 0", function() {
             this.customElementInstance.maxFiles = 0;
-            fileInput.ready.call(this.customElementInstance);
+            fileInput.domReady.call(this.customElementInstance);
             expect(this.fileInputEl.hasAttribute("multiple")).toBeTruthy();
         });
 
         it("does set the multiple attr if maxFiles > 1", function() {
             this.customElementInstance.maxFiles = 2;
-            fileInput.ready.call(this.customElementInstance);
+            fileInput.domReady.call(this.customElementInstance);
             expect(this.fileInputEl.hasAttribute("multiple")).toBeTruthy();
         });
 
         it("enables directory selection only if requested & supported by UA", function() {
-            fileInput.ready.call(this.customElementInstance);
+            fileInput.domReady.call(this.customElementInstance);
             expect(this.fileInputEl.hasAttribute("webkitdirectory")).toBeFalsy();
 
             this.customElementInstance.$.fileInputInput.webkitdirectory = false;
-            fileInput.ready.call(this.customElementInstance);
+            fileInput.domReady.call(this.customElementInstance);
             expect(this.fileInputEl.hasAttribute("webkitdirectory")).toBeFalsy();
 
             this.customElementInstance.directory = true;
-            fileInput.ready.call(this.customElementInstance);
+            fileInput.domReady.call(this.customElementInstance);
             expect(this.fileInputEl.hasAttribute("webkitdirectory")).toBeTruthy();
         });
     });

@@ -22,7 +22,7 @@ that all of your HTML imports are concatenated into one file.__
 @homepage index.html
 -->
 
-<polymer-element name="file-input" attributes="accept camera directory extensions maxFiles maxSize minSize">
+<polymer-element name="file-input" attributes="accept camera directory extensions maxFiles maxSize minSize required">
 
     <template>
 
@@ -185,6 +185,14 @@ that all of your HTML imports are concatenated into one file.__
           */
           
           /**
+           * Text that will appear next to the element if an `<ajax-form>` 
+           * submission is rejected due to an invalid `<file-input>`.  
+           * 
+           * @attributes invalidText
+           * @type string
+           * @default "No valid files selected."
+          
+          /**
            * This is a validation attribute that allows you to filter out any
            * files that do not contain a specific extension.  The value of this 
            * attribute is a JSON array string, containing all extensions to keep.  
@@ -246,6 +254,19 @@ that all of your HTML imports are concatenated into one file.__
              * @type integer
              * @default 0
              */
+             
+            /**
+            * Include this attribute if this element is embedded in an `<ajax-form>`
+            * and you want to prevent submission unless at least one valid file
+            * has been selected.
+            * 
+            *     <file-input required>
+            *         Select Files
+            *     </file-input>
+            *
+            * @attribute required
+            */
+
         Polymer('file-input', fileInput);
         
     </script>
