@@ -12,7 +12,9 @@ describe("file-input custom element tests", function() {
                 fileInput: fileInputEl
             },
 
-            fire: function() {}
+            fire: function() {},
+
+            invalidText: "not valid!"
         };
 
         this.fileInputEl = fileInputEl;
@@ -263,6 +265,46 @@ describe("file-input custom element tests", function() {
 
             expect(this.customElementInstance.files).toEqual(expectedValid);
             expect(this.customElementInstance.invalid).toEqual(expectedInvalid);
+         });
+
+         it("marks the element as invalid on load if `required` attribute exists", function() {
+            var delegateInputEl,
+                fakeParent = jasmine.createSpyObj("fakeParent", ["insertBefore"]);
+
+            this.customElementInstance.parentNode = fakeParent;
+            fakeParent.insertBefore.and.callFake(function(delegateInput, customEl) {
+                delegateInputEl = delegateInput;
+                
+                expect(delegateInput.tagName.toLowerCase()).toEqual("input");
+                expect(delegateInputEl.validity.valid).toBe(true);
+            });
+
+            this.customElementInstance.files = [];
+            this.customElementInstance.required = "";
+
+            fileInput.domReady.call(this.customElementInstance);
+            expect(delegateInputEl.validity.valid).toBe(false);
+            expect(delegateInputEl.customElementRef).toEqual(this.customElementInstance);
+         });
+
+         it("marks the element as valid on load if `required` attribute exists once it is truly valid", function() {
+            var delegateInputEl,
+                fakeParent = jasmine.createSpyObj("fakeParent", ["insertBefore"]);
+
+            this.customElementInstance.parentNode = fakeParent;
+            fakeParent.insertBefore.and.callFake(function(delegateInput, customEl) {
+                delegateInputEl = delegateInput;
+            });
+
+            this.customElementInstance.files = [];
+            this.customElementInstance.required = "";
+
+            fileInput.domReady.call(this.customElementInstance);
+            
+            this.customElementInstance.$.fileInput.files = [{name: "pic.jpg", size: 1000}];
+            fileInput.changeHandler.call(this.customElementInstance);
+
+            expect(delegateInputEl.validity.valid).toBe(true);
          });
     });
 });

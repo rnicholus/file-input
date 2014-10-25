@@ -50,6 +50,7 @@
         "describe",
         "document",
         "expect",
+        "jasmine",
         "navigator",
         "FrameGrab",
         "it",
