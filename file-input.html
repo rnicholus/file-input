@@ -13,7 +13,7 @@ A better `<input type="file">`.
 
 Now, a new, better, evolved (and evolving) element to take its place: `<file-input>`!
 
-#### `<file-input>` integrates perfectly with `<ajax-form>`!
+### And... `<file-input>` integrates perfectly with `<ajax-form>`!
 Simply include a `<file-input>` in [an `<ajax-form>`](https://github.com/garstasio/ajax-form), 
 ensure the `name` attribute is present on the `<file-input>`, and the `<ajax-form>` 
 includes an `enctype` attriute with a value of `multipart/form-data`.  Any valid 
@@ -199,10 +199,11 @@ that all of your HTML imports are concatenated into one file.__
            * Text that will appear next to the element if an `<ajax-form>` 
            * submission is rejected due to an invalid `<file-input>`.  
            * 
-           * @attributes invalidText
+           * @attribute invalidText
            * @type string
            * @default "No valid files selected."
-          
+           */
+           
           /**
            * This is a validation attribute that allows you to filter out any
            * files that do not contain a specific extension.  The value of this 
