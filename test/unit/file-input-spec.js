@@ -9,7 +9,7 @@ describe("file-input custom element tests", function() {
 
         this.customElementInstance = {
             $: {
-                fileInputInput: fileInputEl
+                fileInput: fileInputEl
             },
 
             fire: function() {}
@@ -47,7 +47,7 @@ describe("file-input custom element tests", function() {
             fileInput.domReady.call(this.customElementInstance);
             expect(this.fileInputEl.hasAttribute("webkitdirectory")).toBeFalsy();
 
-            this.customElementInstance.$.fileInputInput.webkitdirectory = false;
+            this.customElementInstance.$.fileInput.webkitdirectory = false;
             fileInput.domReady.call(this.customElementInstance);
             expect(this.fileInputEl.hasAttribute("webkitdirectory")).toBeFalsy();
 
@@ -63,7 +63,7 @@ describe("file-input custom element tests", function() {
             fileInput.invalid = {count: 1, tooBig: [4]};
 
             var div = document.createElement("div");
-            div.appendChild(this.customElementInstance.$.fileInputInput);
+            div.appendChild(this.customElementInstance.$.fileInput);
 
             this.customElementInstance.created = function() {
                 fileInput.created.call(fileInput);
@@ -83,7 +83,7 @@ describe("file-input custom element tests", function() {
                     {name: "plain.txt", size: 2000}
                 ];
 
-            this.customElementInstance.$.fileInputInput.files = {
+            this.customElementInstance.$.fileInput.files = {
                 "0": expectedValid[0],
                 "1": expectedValid[1],
                 length: 2
@@ -100,7 +100,7 @@ describe("file-input custom element tests", function() {
          it("ignores native change event if no files were selected", function() {
             this.customElementInstance.files = [1, 2];
 
-            this.customElementInstance.$.fileInputInput.files = {length: 0};
+            this.customElementInstance.$.fileInput.files = {length: 0};
 
             spyOn(this.customElementInstance, "fire");
             fileInput.changeHandler.call(this.customElementInstance);
@@ -125,7 +125,7 @@ describe("file-input custom element tests", function() {
                     ]
                 };
 
-            this.customElementInstance.$.fileInputInput.files = [
+            this.customElementInstance.$.fileInput.files = [
                     {name: "pic.jpg", size: 1000},
                     {name: "plain.txt", size: 2000},
                     {name: "foo.bar", size: 3000}
@@ -152,7 +152,7 @@ describe("file-input custom element tests", function() {
                     ]
                 };
 
-            this.customElementInstance.$.fileInputInput.files = [
+            this.customElementInstance.$.fileInput.files = [
                     {name: "pic.jpg", size: 1000},
                     {name: "plain.txt", size: 2000},
                     {name: "foo.bar", size: 3000}
@@ -179,7 +179,7 @@ describe("file-input custom element tests", function() {
                     ]
                 };
 
-            this.customElementInstance.$.fileInputInput.files = [
+            this.customElementInstance.$.fileInput.files = [
                     {name: "pic.jpg", size: 1000},
                     {name: "plain.txt", size: 2000},
                     {name: "foo.bar", size: 3000}
@@ -206,7 +206,7 @@ describe("file-input custom element tests", function() {
                     ]
                 };
 
-            this.customElementInstance.$.fileInputInput.files = [
+            this.customElementInstance.$.fileInput.files = [
                     {name: "pic.jpg", size: 1000},
                     {name: "plain.txt", size: 2000},
                     {name: "foo.bar", size: 3000}
@@ -244,7 +244,7 @@ describe("file-input custom element tests", function() {
                     ]
                 };
 
-            this.customElementInstance.$.fileInputInput.files = [
+            this.customElementInstance.$.fileInput.files = [
                     {name: "pic.jpg", size: 1000},
                     {name: "pic2.jpg", size: 1000},
                     {name: "pic3.jpg", size: 1000},
