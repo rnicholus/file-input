@@ -103,11 +103,21 @@
 
         setupValidationTarget = function(customEl) {
             validationTarget = document.createElement("input");
+            validationTarget.setAttribute("tabindex", "-1");
             validationTarget.setAttribute("type", "text");
 
-            validationTarget.style.width = 0;
+            // Strange margin/padding needed to ensure some browsers 
+            // don't hide the validation message immediately after it 
+            // appears (Chrome at this time)
+            validationTarget.style.padding = "1px";
+            validationTarget.style.margin = "-1px";
+
+            validationTarget.style.border = 0;
             validationTarget.style.height = 0;
             validationTarget.style.opacity = 0;
+            validationTarget.style.width = 0;
+            
+            validationTarget.className = "fileInputDelegate";
 
             validationTarget.customElementRef = customEl;
 
