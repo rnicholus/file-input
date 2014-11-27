@@ -8,7 +8,7 @@ A better `<input type="file">`.
 
 ## Installation
 
-`bower install file-input'
+`bower install file-input`
 
 ...or if you have a bower.json file with an entry for file-input:
 
