@@ -1,0 +1,7 @@
+{
+  "name": "file-input#gh-pages",
+  "private": true,
+  "dependencies": {
+    "file-input": "garstasio/file-input#master"
+  }
+}

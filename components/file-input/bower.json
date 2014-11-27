@@ -1,0 +1,21 @@
+{
+  "name": "file-input",
+  "version": "1.1.4",
+  "authors": [
+    "Ray Nicholus"
+  ],
+  "description": "polymer element for styling, normalizing, and generally fixing <input type=\"file\">",
+  "main": "element/*",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+    "keywords": ["Polymer", "web-components", "input", "file", "upload"],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.5.x"
+  }
+}

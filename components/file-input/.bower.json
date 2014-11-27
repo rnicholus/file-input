@@ -1,0 +1,37 @@
+{
+  "name": "file-input",
+  "authors": [
+    "Ray Nicholus"
+  ],
+  "description": "polymer element for styling, normalizing, and generally fixing <input type=\"file\">",
+  "main": "element/*",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "keywords": [
+    "Polymer",
+    "web-components",
+    "input",
+    "file",
+    "upload"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.5.x"
+  },
+  "homepage": "https://github.com/garstasio/file-input",
+  "_release": "b85fa1049f",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "b85fa1049f3da0578f76c5943065ed2a9ef4504b"
+  },
+  "_source": "git://github.com/garstasio/file-input.git",
+  "_target": "master",
+  "_originalSource": "garstasio/file-input",
+  "_direct": true
+}

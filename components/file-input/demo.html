@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>file-input demo</title>
+
+    <script src="../webcomponentsjs/webcomponents.js"></script>
+    <link rel="import" href="file-input.html">
+
+    <!--Only used by the demo to add common bootstrap button styles to the file chooser-->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    
+    <style>
+        .pre {
+            white-space: pre; 
+            unicode-bidi: embed;
+        }
+    </style>
+</head>
+
+<body unresolved>
+
+    <h1>Easily style a file chooser and set restrictions:</h1>
+
+        <p>See the code for this demo in the <a href="https://github.com/garstasio/file-input/tree/gh-pages/components/file-input/demo.html">demo.html file</a>
+        of the <a href="https://github.com/garstasio/file-input">file-input GitHub repository</a>.</p>
+
+        <file-input class="btn btn-primary" extensions='["jpeg", "jpg"]' minSize="500000" maxSize="3000000">
+            <span class="glyphicon glyphicon-file"></span> Select a file
+        </file-input>
+
+        <div>
+            <br/>
+            <p>We've restricted files to those with a "jpeg" or jpg" extension.  Files also must be between 500 kB and 3 MB in size.</p>
+        </div>
+
+        <h3>valid selected files:</h3>
+        <div id="validFiles">
+            No files selected.
+        </div>
+
+        <h3>invalid selected files:</h3>
+        <div id="invalidFiles">
+            No files selected.
+        </div>
+</body>
+
+<script>
+    document.getElementsByTagName('file-input')[0].addEventListener('change', function(event) {
+        var valid = event.detail.valid,
+            invalid = event.detail.invalid,
+            validFilesEl = document.getElementById('validFiles'),
+            validFiles = [],
+            invalidFilesEl = document.getElementById('invalidFiles'),
+            invalidFiles = {};
+        
+        if (valid.length) {
+            validFiles = valid.map(function(file) {
+                return {
+                    name: file.name,
+                    size: file.size
+                };
+            });
+            validFilesEl.className = 'pre'
+            validFilesEl.innerHTML = JSON.stringify(validFiles, null, 3);
+        }
+        else {
+            validFilesEl.className = ''
+            validFilesEl.innerHTML = 'No valid files.';
+        }
+
+        if (invalid.count) {
+            Object.keys(invalid).forEach(function(key) {
+                if (key !== 'count') {
+                    invalidFiles[key] = invalid[key].map(function(file) {
+                        return {
+                            name: file.name,
+                            size: file.size
+                        };    
+                    });
+                }    
+            });
+            invalidFilesEl.className = 'pre'
+            invalidFilesEl.innerHTML = JSON.stringify(invalidFiles, null, 3);
+        }
+        else {
+            invalidFilesEl.className = ''
+            invalidFilesEl.innerHTML = 'No invalid files.';
+        }
+    });
+</script>
+
+</html>
