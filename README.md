@@ -3,8 +3,8 @@ file-input
 
 A better `<input type="file">`.
 
-[![Build Status](https://travis-ci.org/garstasio/file-input.svg?branch=master)](https://travis-ci.org/garstasio/file-input)
-[![Coverage Status](https://coveralls.io/repos/garstasio/file-input/badge.png?branch=master)](https://coveralls.io/r/garstasio/file-input?branch=master)
+[![Build Status](https://travis-ci.org/rnicholus/file-input.svg?branch=master)](https://travis-ci.org/rnicholus/file-input)
+[![Coverage Status](https://coveralls.io/repos/rnicholus/file-input/badge.png?branch=master)](https://coveralls.io/r/rnicholus/file-input?branch=master)
 
 ## Installation
 
@@ -14,4 +14,4 @@ A better `<input type="file">`.
 
 `bower update`
 
-See the [component page](http://garstasio.github.io/file-input) for complete documentation and demos.
+See the [component page](http://file-input.raynicholus.com) for complete documentation and demos.
