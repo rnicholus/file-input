@@ -6,6 +6,8 @@ module.exports = {
 
         basePath : ".",
 
+        browserNoActivityTimeout: 300000,
+
         files : [
             "../webcomponentsjs/webcomponents-lite.js",
             "file-input.js",

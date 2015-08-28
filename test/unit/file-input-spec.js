@@ -1,7 +1,5 @@
 /* globals fileInput */
 describe("file-input custom element tests", function() {
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000000;
-
     var loadFileInput = function() {
             var fileInputEl = document.createElement("file-input");
             document.body.appendChild(fileInputEl);
