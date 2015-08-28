@@ -1,37 +1,17 @@
 // jshint maxparams:4
 /*global HTMLElement, CustomEvent*/
 var fileInput = (function() {
-    var addShadowRoot = (function () {
+    var insertIntoDocument = (function () {
             "use strict";
-            var importDoc, shimStyle;
+            var importDoc;
 
             importDoc = (document._currentScript || document.currentScript).ownerDocument;
 
-            if (window.ShadowDOMPolyfill) {
-                shimStyle = document.createElement("style");
-                document.head.insertBefore(shimStyle, document.head.firstChild);
-            }
+            return function (obj, idTemplate) {
+                var template = importDoc.getElementById(idTemplate),
+                    clone = document.importNode(template.content, true);
 
-            return function (obj, idTemplate, tagName) {
-                var template, list;
-
-                obj.root = obj.createShadowRoot();
-                template = importDoc.getElementById(idTemplate);
-                obj.root.appendChild(template.content.cloneNode(true));
-
-                if (window.ShadowDOMPolyfill) {
-                    list = obj.root.getElementsByTagName("style");
-                    Array.prototype.forEach.call(list, function (style) {
-                        if (!template.shimmed) {
-                            shimStyle.innerHTML += style.innerHTML
-                                .replace(/:host\b/gm, tagName || idTemplate)
-                                .replace(/::shadow\b/gm, " ")
-                                .replace(/::content\b/gm, " ");
-                        }
-                        style.parentNode.removeChild(style);
-                    });
-                    template.shimmed = true;
-                }
+                obj.appendChild(clone);
             };
         }()),
         declaredProps = (function () {
@@ -208,11 +188,11 @@ var fileInput = (function() {
 
         // This is the only way (I am aware of) to reset an `<input type="file">`
         // without removing it from the DOM.  Removing it disconnects it
-    // from the CE.
+        // from the CE.
         resetInput = function(customEl) {
             // create a form with a hidden reset button
             var tempForm = document.createElement("form"),
-                fileInput = customEl.root.getElementById("fileInput"),
+                fileInput = customEl.querySelector(".fileInput"),
                 tempResetButton = document.createElement("button");
 
             tempResetButton.setAttribute("type", "reset");
@@ -284,7 +264,8 @@ var fileInput = (function() {
             },
             maxFiles : {
                 type : Number,
-                value : 0
+                value : 0,
+                observer : "setMaxFiles"
             },
             maxSize : {
                 type : Number,
@@ -297,9 +278,11 @@ var fileInput = (function() {
         };
 
     var fileInputPrototype = Object.create(HTMLElement.prototype);
-    fileInputPrototype.changeHandler = function() {
+    fileInputPrototype.changeHandler = function(event) {
+        event.stopPropagation();
+
         var customEl = this,
-        fileInput = customEl.root.getElementById("fileInput"),
+        fileInput = customEl.querySelector(".fileInput"),
         files = arrayOf(fileInput.files),
         invalid = {count: 0},
         valid = [];
@@ -343,23 +326,34 @@ var fileInput = (function() {
     fileInputPrototype.invalidText = "No valid files selected.";
 
     fileInputPrototype.setAccept = function (val) {
-        var fileInput = this.root.getElementById("fileInput");
+        var fileInput = this.querySelector(".fileInput");
         fileInput.setAttribute("accept", val);
     };
 
+    fileInputPrototype.setMaxFiles = function (val) {
+        var fileInput = this.querySelector(".fileInput");
+        if (val !== 1) {
+            fileInput.setAttribute("multiple", "");
+        }
+        else {
+            fileInput.removeAttribute("multiple");
+        }
+    };
+
     fileInputPrototype.attributeChangedCallback = function(attr, oldVal, newVal) {
+        console.log(attr);
         declaredProps.syncProperty(this, properties, attr, newVal);
     };
 
     fileInputPrototype.createdCallback = function() {
         var fileInput, customEl = this;
 
-        addShadowRoot(this, "file-input");
+        insertIntoDocument(this, "file-input");
         declaredProps.init(this, properties);
 
         this.setAccept(this.accept);
 
-        fileInput = customEl.root.getElementById("fileInput");
+        fileInput = customEl.querySelector(".fileInput");
         fileInput.addEventListener("change", this.changeHandler.bind(this));
         customEl.files = [];
         customEl.invalid = {count: 0};
@@ -392,7 +386,6 @@ var fileInput = (function() {
     fileInputPrototype.reset = function() {
         var customEl = this;
 
-        customEl.created();
         resetInput(customEl);
     };
 

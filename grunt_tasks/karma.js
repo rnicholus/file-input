@@ -7,7 +7,9 @@ module.exports = {
         basePath : ".",
 
         files : [
+            "../webcomponentsjs/webcomponents.js",
             "file-input.js",
+            "file-input.html",
             "test/unit/*-spec.js"
         ],
 
@@ -41,9 +43,9 @@ module.exports = {
 
     },
     dev: {
-        browsers: ["PhantomJS"]
+        browsers: ["Firefox"]
     },
     travis: {
-        browsers: ["PhantomJS", "Firefox"]
+        browsers: ["Firefox"]
     }
 };
