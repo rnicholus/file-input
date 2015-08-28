@@ -60,25 +60,20 @@ describe("file-input custom element tests", function() {
         });
     });
 
-//    describe("reset tests", function() {
-//        it("resets the file arrays on reset", function() {
-//            fileInput.files = [1,2,3];
-//            fileInput.invalid = {count: 1, tooBig: [4]};
-//
-//            var div = document.createElement("div");
-//            div.appendChild(this.customElementInstance.$.fileInput);
-//
-//            this.customElementInstance.created = function() {
-//                fileInput.created.call(fileInput);
-//            };
-//
-//            fileInput.reset.call(this.customElementInstance);
-//
-//            expect(fileInput.files).toEqual([]);
-//            expect(fileInput.invalid).toEqual({count: 0});
-//        });
-//    });
-//
+    describe("reset tests", function() {
+        it("resets the file arrays on reset", function() {
+            var fileInputEl = loadFileInput();
+
+            fileInputEl.files = [1,2,3];
+            fileInputEl.invalid = {count: 1, tooBig: [4]};
+
+            fileInputEl.reset();
+
+            expect(fileInputEl.files).toEqual([]);
+            expect(fileInputEl.invalid).toEqual({count: 0});
+        });
+    });
+
 //    describe("validation tests", function() {
 //         it("doesn't reject any files if no validation rules are present, coverts psuedo-array of files to 'real' Array, & passes this info to event handler as well", function() {
 //            var expectedValid = [

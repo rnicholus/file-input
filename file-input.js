@@ -210,6 +210,10 @@ var fileInput = (function() {
             tempForm.parentNode.appendChild(fileInput);
             tempForm.parentNode.removeChild(tempForm);
 
+            customEl.files = [];
+            customEl.invalid = {count: 0};
+            customEl.valid = [];
+
             updateValidity(customEl);
         },
 
@@ -355,7 +359,6 @@ var fileInput = (function() {
     };
 
     fileInputPrototype.attributeChangedCallback = function(attr, oldVal, newVal) {
-        console.log(attr);
         declaredProps.syncProperty(this, properties, attr, newVal);
     };
 
