@@ -22,7 +22,6 @@ module.exports = {
             "karma-coveralls",
             "karma-firefox-launcher",
             "karma-jasmine",
-            "karma-phantomjs-launcher",
             "karma-spec-reporter"
         ],
 
