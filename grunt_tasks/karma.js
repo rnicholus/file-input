@@ -9,7 +9,7 @@ module.exports = {
         browserNoActivityTimeout: 300000,
 
         files : [
-            "../webcomponentsjs/webcomponents-lite.js",
+            "node_modules/webcomponents.js/webcomponents-lite.js",
             "file-input.js",
             "file-input.html",
             "test/unit/*-spec.js"

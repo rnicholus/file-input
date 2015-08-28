@@ -19,11 +19,11 @@ describe("file-input custom element tests", function() {
         it("initializes objects & arrays in the 'created' callback", function(done) {
             var fileInputEl = loadFileInput();
 
-            window.setTimeout(function() {
+            window.addEventListener("WebComponentsReady", function(e) {
                 expect(fileInputEl.files).toEqual([]);
                 expect(fileInputEl.invalid).toEqual({count: 0});
                 done();
-            }, 1000);
+            });
         });
 
         it("doesn't set the multiple attr if maxFiles === 1", function() {
