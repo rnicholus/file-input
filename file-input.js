@@ -257,7 +257,11 @@ var fileInput = (function() {
                 observer : "setAccept"
             },
             camera : Boolean,
-            directory : Boolean,
+            directory : {
+                type: Boolean,
+                value: false,
+                observer: "setDirectory"
+            },
             extensions : {
                 type : String, //Not really an array
                 value : "[]",
@@ -330,6 +334,16 @@ var fileInput = (function() {
         fileInput.setAttribute("accept", val);
     };
 
+    fileInputPrototype.setDirectory = function(val) {
+        var fileInput = this.querySelector(".fileInput");
+        if (val && fileInput.webkitdirectory !== undefined) {
+            fileInput.setAttribute("webkitdirectory", "");
+        }
+        else {
+            fileInput.removeAttribute("webkitdirectory");
+        }
+    };
+
     fileInputPrototype.setMaxFiles = function (val) {
         var fileInput = this.querySelector(".fileInput");
         if (val !== 1) {
@@ -370,13 +384,8 @@ var fileInput = (function() {
             }
         }
 
-        if (customEl.maxFiles !== 1) {
-            fileInput.setAttribute("multiple", "");
-        }
-
-        if (customEl.directory && fileInput.webkitdirectory !== undefined) {
-            fileInput.setAttribute("webkitdirectory", "");
-        }
+        this.setMaxFiles(customEl.maxFiles);
+        this.setDirectory(customEl.directory);
 
         if (customEl.required) {
             setupValidationTarget(customEl);

@@ -38,24 +38,26 @@ describe("file-input custom element tests", function() {
             expect(fileInputEl.querySelector(".fileInput").hasAttribute("multiple")).toBeTruthy();
         });
 
-        //it("does set the multiple attr if maxFiles > 1", function() {
-        //    this.customElementInstance.maxFiles = 2;
-        //    fileInput.domReady.call(this.customElementInstance);
-        //    expect(this.fileInputEl.hasAttribute("multiple")).toBeTruthy();
-        //});
-        //
-        //it("enables directory selection only if requested & supported by UA", function() {
-        //    fileInput.domReady.call(this.customElementInstance);
-        //    expect(this.fileInputEl.hasAttribute("webkitdirectory")).toBeFalsy();
-        //
-        //    this.customElementInstance.$.fileInput.webkitdirectory = false;
-        //    fileInput.domReady.call(this.customElementInstance);
-        //    expect(this.fileInputEl.hasAttribute("webkitdirectory")).toBeFalsy();
-        //
-        //    this.customElementInstance.directory = true;
-        //    fileInput.domReady.call(this.customElementInstance);
-        //    expect(this.fileInputEl.hasAttribute("webkitdirectory")).toBeTruthy();
-        //});
+        it("does set the multiple attr if maxFiles > 1", function() {
+            var fileInputEl = loadFileInput();
+            fileInputEl.maxFiles = 2;
+            expect(fileInputEl.querySelector(".fileInput").hasAttribute("multiple")).toBeTruthy();
+        });
+
+        it("enables directory selection only if requested & supported by UA", function() {
+            var fileInputEl = loadFileInput();
+
+            // fake file-input into thinking directory selection is supported;
+            fileInputEl.querySelector(".fileInput").webkitdirectory = null;
+
+            expect(fileInputEl.querySelector(".fileInput").hasAttribute("webkitdirectory")).toBeFalsy();
+
+            fileInput.directory = false;
+            expect(fileInputEl.querySelector(".fileInput").hasAttribute("webkitdirectory")).toBeFalsy();
+
+            fileInputEl.directory = true;
+            expect(fileInputEl.querySelector(".fileInput").hasAttribute("webkitdirectory")).toBeTruthy();
+        });
     });
 
 //    describe("reset tests", function() {
