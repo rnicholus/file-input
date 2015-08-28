@@ -47,6 +47,10 @@
 </body>
 
 <script>
+    window.addEventListener('WebComponentsReady', function(e) {
+        document.body.removeAttribute('unresolved');
+    });
+
     document.getElementsByTagName('file-input')[0].addEventListener('change', function(event) {
         var valid = event.detail.valid,
             invalid = event.detail.invalid,

@@ -3,7 +3,7 @@
         "name": "Ray Nicholus"
     },
     "bugs": "https://github.com/garstasio/file-input/issues",
-    "description": "polymer element for styling, normalizing, and generally fixing <input type=\"file\">",
+    "description": "web component for styling, normalizing, and generally fixing <input type=\"file\">",
     "devDependencies": {
         "grunt": "0.4.x",
         "grunt-contrib-jshint": "0.10.x",
@@ -22,5 +22,5 @@
         "type" : "git",
         "url" : "https://github.com/garstasio/file-input.git"
     },
-    "version": "1.1.4"
+    "version": "2.0.0"
 }

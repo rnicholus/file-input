@@ -208,7 +208,7 @@ var fileInput = (function() {
 
         // This is the only way (I am aware of) to reset an `<input type="file">`
         // without removing it from the DOM.  Removing it disconnects it
-        // from the CE/Polymer.
+    // from the CE.
         resetInput = function(customEl) {
             // create a form with a hidden reset button
             var tempForm = document.createElement("form"),
