@@ -7,7 +7,7 @@ module.exports = {
         basePath : ".",
 
         files : [
-            "../webcomponentsjs/webcomponents.js",
+            "../webcomponentsjs/webcomponents-lite.js",
             "file-input.js",
             "file-input.html",
             "test/unit/*-spec.js"
