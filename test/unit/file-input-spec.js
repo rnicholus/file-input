@@ -1,4 +1,4 @@
-/* globals fileInput */
+/* globals CustomEvent */
 describe("file-input custom element tests", function() {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
@@ -8,7 +8,8 @@ describe("file-input custom element tests", function() {
             return fileInputEl;
         },
         removeFileInput = function() {
-            document.body.removeChild(document.querySelector("file-input"));
+            var fileInputEl = document.querySelector("file-input");
+            fileInputEl && fileInputEl.parentNode.removeChild(fileInputEl);
         };
 
     afterEach(function() {
@@ -52,7 +53,7 @@ describe("file-input custom element tests", function() {
 
             expect(fileInputEl.querySelector(".fileInput").hasAttribute("webkitdirectory")).toBeFalsy();
 
-            fileInput.directory = false;
+            fileInputEl.directory = false;
             expect(fileInputEl.querySelector(".fileInput").hasAttribute("webkitdirectory")).toBeFalsy();
 
             fileInputEl.directory = true;
@@ -74,233 +75,258 @@ describe("file-input custom element tests", function() {
         });
     });
 
-//    describe("validation tests", function() {
-//         it("doesn't reject any files if no validation rules are present, coverts psuedo-array of files to 'real' Array, & passes this info to event handler as well", function() {
-//            var expectedValid = [
-//                    {name: "pic.jpg", size: 1000},
-//                    {name: "plain.txt", size: 2000}
-//                ];
-//
-//            this.customElementInstance.$.fileInput.files = {
-//                "0": expectedValid[0],
-//                "1": expectedValid[1],
-//                length: 2
-//            };
-//
-//            spyOn(this.customElementInstance, "fire");
-//            fileInput.changeHandler.call(this.customElementInstance);
-//
-//            expect(this.customElementInstance.fire).toHaveBeenCalledWith("change", {invalid: {count: 0}, valid: expectedValid});
-//            expect(this.customElementInstance.files).toEqual(expectedValid);
-//            expect(this.customElementInstance.invalid).toEqual({count: 0});
-//         });
-//
-//         it("ignores native change event if no files were selected", function() {
-//            this.customElementInstance.files = [1, 2];
-//
-//            this.customElementInstance.$.fileInput.files = {length: 0};
-//
-//            spyOn(this.customElementInstance, "fire");
-//            fileInput.changeHandler.call(this.customElementInstance);
-//
-//            expect(this.customElementInstance.fire).not.toHaveBeenCalled();
-//            expect(this.customElementInstance.files).toEqual([1, 2]);
-//         });
-//
-//         it("rejects files that are too big or too small", function() {
-//            var expectedValid = [
-//                    {name: "plain.txt", size: 2000}
-//                ],
-//                expectedInvalid = {
-//                    count: 2,
-//
-//                    tooBig: [
-//                        {name: "foo.bar", size: 3000}
-//                    ],
-//
-//                    tooSmall: [
-//                         {name: "pic.jpg", size: 1000}
-//                    ]
-//                };
-//
-//            this.customElementInstance.$.fileInput.files = [
-//                    {name: "pic.jpg", size: 1000},
-//                    {name: "plain.txt", size: 2000},
-//                    {name: "foo.bar", size: 3000}
-//                ];
-//
-//            this.customElementInstance.maxSize = 2500;
-//            this.customElementInstance.minSize = 1500;
-//            fileInput.changeHandler.call(this.customElementInstance);
-//
-//            expect(this.customElementInstance.files).toEqual(expectedValid);
-//            expect(this.customElementInstance.invalid).toEqual(expectedInvalid);
-//         });
-//
-//         it("rejects files with an invalid extension", function() {
-//            var expectedValid = [
-//                    {name: "pic.jpg", size: 1000}
-//                ],
-//                expectedInvalid = {
-//                    count: 2,
-//
-//                    badExtension: [
-//                        {name: "plain.txt", size: 2000},
-//                        {name: "foo.bar", size: 3000}
-//                    ]
-//                };
-//
-//            this.customElementInstance.$.fileInput.files = [
-//                    {name: "pic.jpg", size: 1000},
-//                    {name: "plain.txt", size: 2000},
-//                    {name: "foo.bar", size: 3000}
-//                ];
-//
-//            /* jshint quotmark:false */
-//            this.customElementInstance.extensions = '["jpg"]';
-//            fileInput.changeHandler.call(this.customElementInstance);
-//
-//            expect(this.customElementInstance.files).toEqual(expectedValid);
-//            expect(this.customElementInstance.invalid).toEqual(expectedInvalid);
-//         });
-//
-//         it("rejects files with an invalid extension (negated)", function() {
-//            var expectedValid = [
-//                    {name: "plain.txt", size: 2000},
-//                    {name: "foo.bar", size: 3000}
-//                ],
-//                expectedInvalid = {
-//                    count: 1,
-//
-//                    badExtension: [
-//                        {name: "pic.jpg", size: 1000}
-//                    ]
-//                };
-//
-//            this.customElementInstance.$.fileInput.files = [
-//                    {name: "pic.jpg", size: 1000},
-//                    {name: "plain.txt", size: 2000},
-//                    {name: "foo.bar", size: 3000}
-//                ];
-//
-//            /* jshint quotmark:false */
-//            this.customElementInstance.extensions = '!["jpg"]';
-//            fileInput.changeHandler.call(this.customElementInstance);
-//
-//            expect(this.customElementInstance.files).toEqual(expectedValid);
-//            expect(this.customElementInstance.invalid).toEqual(expectedInvalid);
-//         });
-//
-//          it("rejects files passed the maxFiles limit", function() {
-//            var expectedValid = [
-//                    {name: "pic.jpg", size: 1000}
-//                ],
-//                expectedInvalid = {
-//                    count: 2,
-//
-//                    tooMany: [
-//                        {name: "plain.txt", size: 2000},
-//                        {name: "foo.bar", size: 3000}
-//                    ]
-//                };
-//
-//            this.customElementInstance.$.fileInput.files = [
-//                    {name: "pic.jpg", size: 1000},
-//                    {name: "plain.txt", size: 2000},
-//                    {name: "foo.bar", size: 3000}
-//                ];
-//
-//            /* jshint quotmark:false */
-//            this.customElementInstance.maxFiles = 1;
-//            fileInput.changeHandler.call(this.customElementInstance);
-//
-//            expect(this.customElementInstance.files).toEqual(expectedValid);
-//            expect(this.customElementInstance.invalid).toEqual(expectedInvalid);
-//         });
-//
-//         it("respects all validation rules at once in the proper order", function() {
-//            var expectedValid = [
-//                    {name: "pic.jpg", size: 1000},
-//                    {name: "pic2.jpg", size: 1000},
-//                    {name: "pic3.jpg", size: 1000},
-//                ],
-//                expectedInvalid = {
-//                    count: 5,
-//
-//                    badExtension: [
-//                        {name: "plain.txt", size: 2000},
-//                        {name: "foo.bar", size: 3000}
-//                    ],
-//
-//                    tooBig: [
-//                        {name: "pi5.jpg", size: 9999},
-//                    ],
-//
-//                    tooMany: [
-//                        {name: "pic4.jpg", size: 1000},
-//                        {name: "pic6.jpg", size: 1000},
-//                    ]
-//                };
-//
-//            this.customElementInstance.$.fileInput.files = [
-//                    {name: "pic.jpg", size: 1000},
-//                    {name: "pic2.jpg", size: 1000},
-//                    {name: "pic3.jpg", size: 1000},
-//                    {name: "pic4.jpg", size: 1000},
-//                    {name: "pi5.jpg", size: 9999},
-//                    {name: "pic6.jpg", size: 1000},
-//                    {name: "plain.txt", size: 2000},
-//                    {name: "foo.bar", size: 3000}
-//                ];
-//
-//            /* jshint quotmark:false */
-//            this.customElementInstance.extensions = '["jpg"]';
-//            this.customElementInstance.maxFiles = 3;
-//            this.customElementInstance.maxSize = 8000;
-//            fileInput.changeHandler.call(this.customElementInstance);
-//
-//            expect(this.customElementInstance.files).toEqual(expectedValid);
-//            expect(this.customElementInstance.invalid).toEqual(expectedInvalid);
-//         });
-//
-//         it("marks the element as invalid on load if `required` attribute exists", function() {
-//            var delegateInputEl,
-//                fakeParent = jasmine.createSpyObj("fakeParent", ["insertBefore"]);
-//
-//            this.customElementInstance.parentNode = fakeParent;
-//            fakeParent.insertBefore.and.callFake(function(delegateInput, customEl) {
-//                delegateInputEl = delegateInput;
-//
-//                expect(delegateInput.tagName.toLowerCase()).toEqual("input");
-//                expect(delegateInputEl.validity.valid).toBe(true);
-//            });
-//
-//            this.customElementInstance.files = [];
-//            this.customElementInstance.required = "";
-//
-//            fileInput.domReady.call(this.customElementInstance);
-//            expect(delegateInputEl.validity.valid).toBe(false);
-//            expect(delegateInputEl.customElementRef).toEqual(this.customElementInstance);
-//         });
-//
-//         it("marks the element as valid on load if `required` attribute exists once it is truly valid", function() {
-//            var delegateInputEl,
-//                fakeParent = jasmine.createSpyObj("fakeParent", ["insertBefore"]);
-//
-//            this.customElementInstance.parentNode = fakeParent;
-//            fakeParent.insertBefore.and.callFake(function(delegateInput, customEl) {
-//                delegateInputEl = delegateInput;
-//            });
-//
-//            this.customElementInstance.files = [];
-//            this.customElementInstance.required = "";
-//
-//            fileInput.domReady.call(this.customElementInstance);
-//
-//            this.customElementInstance.$.fileInput.files = [{name: "pic.jpg", size: 1000}];
-//            fileInput.changeHandler.call(this.customElementInstance);
-//
-//            expect(delegateInputEl.validity.valid).toBe(true);
-//         });
-//    });
+    describe("validation tests", function() {
+        it("doesn't reject any files if no validation rules are present, coverts psuedo-array of files to 'real' Array, & passes this info to event handler as well", function() {
+            var fileInputEl = loadFileInput(),
+                expectedValid = [
+                    {name: "pic.jpg", size: 1000},
+                    {name: "plain.txt", size: 2000}
+                ];
+
+            spyOn(fileInputEl, "querySelector").and.returnValue({
+                files: {
+                    "0": expectedValid[0],
+                    "1": expectedValid[1],
+                    length: 2
+                }
+            });
+
+            spyOn(fileInputEl, "dispatchEvent");
+            fileInputEl.changeHandler.call(fileInputEl, {stopPropagation: function(){}});
+            expect(fileInputEl.dispatchEvent).toHaveBeenCalledWith(new CustomEvent("change", { detail : {count: 0}, valid: expectedValid}));
+            expect(fileInputEl.files).toEqual(expectedValid);
+            expect(fileInputEl.invalid).toEqual({count: 0});
+        });
+
+        it("ignores native change event if no files were selected", function() {
+            var fileInputEl = loadFileInput();
+
+            fileInputEl.files = [1, 2];
+
+            spyOn(fileInputEl, "querySelector").and.returnValue({
+                files: {
+                    length: 0
+                }
+            });
+
+            spyOn(fileInputEl, "dispatchEvent");
+            fileInputEl.changeHandler.call(fileInputEl, {stopPropagation: function(){}});
+
+            expect(fileInputEl.dispatchEvent).not.toHaveBeenCalled();
+            expect(fileInputEl.files).toEqual([1, 2]);
+        });
+
+        it("rejects files that are too big or too small", function() {
+            var fileInputEl = loadFileInput(),
+                expectedValid = [
+                    {name: "plain.txt", size: 2000}
+                ],
+                expectedInvalid = {
+                    count: 2,
+
+                    tooBig: [
+                        {name: "foo.bar", size: 3000}
+                    ],
+
+                    tooSmall: [
+                        {name: "pic.jpg", size: 1000}
+                    ]
+                };
+
+            spyOn(fileInputEl, "querySelector").and.returnValue({
+                files: [
+                    {name: "pic.jpg", size: 1000},
+                    {name: "plain.txt", size: 2000},
+                    {name: "foo.bar", size: 3000}
+                ]
+            });
+
+            fileInputEl.maxSize = 2500;
+            fileInputEl.minSize = 1500;
+            fileInputEl.changeHandler.call(fileInputEl, {stopPropagation: function(){}});
+
+            expect(fileInputEl.files).toEqual(expectedValid);
+            expect(fileInputEl.invalid).toEqual(expectedInvalid);
+        });
+
+        it("rejects files with an invalid extension", function() {
+            var fileInputEl = loadFileInput(),
+                expectedValid = [
+                    {name: "pic.jpg", size: 1000}
+                ],
+                expectedInvalid = {
+                    count: 2,
+
+                    badExtension: [
+                        {name: "plain.txt", size: 2000},
+                        {name: "foo.bar", size: 3000}
+                    ]
+                };
+
+            spyOn(fileInputEl, "querySelector").and.returnValue({
+                files: [
+                    {name: "pic.jpg", size: 1000},
+                    {name: "plain.txt", size: 2000},
+                    {name: "foo.bar", size: 3000}
+                ]
+            });
+
+            /* jshint quotmark:false */
+            fileInputEl.extensions = '["jpg"]';
+            fileInputEl.changeHandler.call(fileInputEl, {stopPropagation: function(){}});
+
+            expect(fileInputEl.files).toEqual(expectedValid);
+            expect(fileInputEl.invalid).toEqual(expectedInvalid);
+        });
+
+        it("rejects files with an invalid extension (negated)", function() {
+            var fileInputEl = loadFileInput(),
+                expectedValid = [
+                    {name: "plain.txt", size: 2000},
+                    {name: "foo.bar", size: 3000}
+                ],
+                expectedInvalid = {
+                    count: 1,
+
+                    badExtension: [
+                        {name: "pic.jpg", size: 1000}
+                    ]
+                };
+
+            spyOn(fileInputEl, "querySelector").and.returnValue({
+                files: [
+                    {name: "pic.jpg", size: 1000},
+                    {name: "plain.txt", size: 2000},
+                    {name: "foo.bar", size: 3000}
+                ]
+            });
+
+            /* jshint quotmark:false */
+            fileInputEl.extensions = '!["jpg"]';
+            fileInputEl.changeHandler.call(fileInputEl, {stopPropagation: function(){}});
+
+            expect(fileInputEl.files).toEqual(expectedValid);
+            expect(fileInputEl.invalid).toEqual(expectedInvalid);
+        });
+
+        it("rejects files passed the maxFiles limit", function() {
+            var fileInputEl = loadFileInput(),
+                expectedValid = [
+                    {name: "pic.jpg", size: 1000}
+                ],
+                expectedInvalid = {
+                    count: 2,
+
+                    tooMany: [
+                        {name: "plain.txt", size: 2000},
+                        {name: "foo.bar", size: 3000}
+                    ]
+                };
+
+            spyOn(fileInputEl, "querySelector").and.returnValue({
+                files: [
+                    {name: "pic.jpg", size: 1000},
+                    {name: "plain.txt", size: 2000},
+                    {name: "foo.bar", size: 3000}
+                ],
+                removeAttribute: function() {}
+            });
+
+            /* jshint quotmark:false */
+            fileInputEl.maxFiles = 1;
+            fileInputEl.changeHandler.call(fileInputEl, {stopPropagation: function(){}});
+
+            expect(fileInputEl.files).toEqual(expectedValid);
+            expect(fileInputEl.invalid).toEqual(expectedInvalid);
+        });
+
+        it("respects all validation rules at once in the proper order", function() {
+            var fileInputEl = loadFileInput(),
+                expectedValid = [
+                    {name: "pic.jpg", size: 1000},
+                    {name: "pic2.jpg", size: 1000},
+                    {name: "pic3.jpg", size: 1000},
+                ],
+                expectedInvalid = {
+                    count: 5,
+
+                    badExtension: [
+                        {name: "plain.txt", size: 2000},
+                        {name: "foo.bar", size: 3000}
+                    ],
+
+                    tooBig: [
+                        {name: "pi5.jpg", size: 9999},
+                    ],
+
+                    tooMany: [
+                        {name: "pic4.jpg", size: 1000},
+                        {name: "pic6.jpg", size: 1000},
+                    ]
+                };
+
+            spyOn(fileInputEl, "querySelector").and.returnValue({
+                files: [
+                    {name: "pic.jpg", size: 1000},
+                    {name: "pic2.jpg", size: 1000},
+                    {name: "pic3.jpg", size: 1000},
+                    {name: "pic4.jpg", size: 1000},
+                    {name: "pi5.jpg", size: 9999},
+                    {name: "pic6.jpg", size: 1000},
+                    {name: "plain.txt", size: 2000},
+                    {name: "foo.bar", size: 3000}
+                ],
+                setAttribute: function() {}
+            });
+
+            /* jshint quotmark:false */
+            fileInputEl.extensions = '["jpg"]';
+            fileInputEl.maxFiles = 3;
+            fileInputEl.maxSize = 8000;
+            fileInputEl.changeHandler.call(fileInputEl, {stopPropagation: function(){}});
+
+            expect(fileInputEl.files).toEqual(expectedValid);
+            expect(fileInputEl.invalid).toEqual(expectedInvalid);
+        });
+
+        it("marks the element as invalid on load if `required` attribute exists", function(done) {
+            var fileInputElParent = document.createElement("div"),
+                delegateInputEl;
+
+            spyOn(fileInputElParent, "insertBefore").and.callFake(function(delegateInput) {
+                delegateInputEl = delegateInput;
+
+                expect(delegateInput.tagName.toLowerCase()).toEqual("input");
+                expect(delegateInput.validity.valid).toBe(true);
+                expect(delegateInputEl.customElementRef).toEqual(fileInputElParent.children[0]);
+                window.setTimeout(function() {
+                    expect(delegateInput.validity.valid).toBe(false);
+                    done();
+                }, 100);
+            });
+
+            fileInputElParent.insertAdjacentHTML("afterbegin", "<file-input required></file-input>");
+            document.body.appendChild(fileInputElParent);
+        });
+
+        it("marks the element as valid on load if `required` attribute exists once it is truly valid", function(done) {
+            var fileInputElParent = document.createElement("div"),
+                delegateInputEl;
+
+            spyOn(fileInputElParent, "insertBefore").and.callFake(function(delegateInput) {
+                delegateInputEl = delegateInput;
+
+                fileInputElParent.children[0].files = [
+                    {name: "pic.jpg", size: 1000}
+                ];
+                window.setTimeout(function() {
+                    expect(delegateInput.validity.valid).toBe(true);
+                    done();
+                }, 100);
+            });
+
+            fileInputElParent.insertAdjacentHTML("afterbegin", "<file-input required></file-input>");
+            document.body.appendChild(fileInputElParent);
+        });
+    });
 });

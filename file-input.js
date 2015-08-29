@@ -267,8 +267,7 @@ var fileInput = (function() {
                 observer: "setDirectory"
             },
             extensions : {
-                type : String, //Not really an array
-                value : "[]",
+                type : String //JSON array
             },
             maxFiles : {
                 type : Number,
@@ -283,6 +282,10 @@ var fileInput = (function() {
                 type : Number,
                 value : 0
             },
+            required: {
+                type : Boolean,
+                value: false
+            }
         };
 
     var fileInputPrototype = Object.create(HTMLElement.prototype);
@@ -372,6 +375,7 @@ var fileInput = (function() {
 
         fileInput = customEl.querySelector(".fileInput");
         fileInput.addEventListener("change", this.changeHandler.bind(this));
+
         customEl.files = [];
         customEl.invalid = {count: 0};
 
