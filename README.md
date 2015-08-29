@@ -4,7 +4,7 @@ file-input
 A better `<input type="file">`.
 
 [![Build Status](https://travis-ci.org/rnicholus/file-input.svg?branch=master)](https://travis-ci.org/rnicholus/file-input)
-[![Coverage Status](https://coveralls.io/repos/rnicholus/file-input/badge.png?branch=master)](https://coveralls.io/r/rnicholus/file-input?branch=master)
+[![Coverage Status](https://coveralls.io/repos/garstasio/file-input/badge.png?branch=master)](https://coveralls.io/r/garstasio/file-input?branch=master)
 
 ## Installation
 
