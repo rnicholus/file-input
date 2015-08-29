@@ -6,8 +6,12 @@ module.exports = {
 
         basePath : ".",
 
+        browserNoActivityTimeout: 300000,
+
         files : [
+            "node_modules/webcomponents.js/webcomponents-lite.js",
             "file-input.js",
+            "file-input.html",
             "test/unit/*-spec.js"
         ],
 
@@ -18,7 +22,6 @@ module.exports = {
             "karma-coveralls",
             "karma-firefox-launcher",
             "karma-jasmine",
-            "karma-phantomjs-launcher",
             "karma-spec-reporter"
         ],
 
@@ -41,9 +44,9 @@ module.exports = {
 
     },
     dev: {
-        browsers: ["PhantomJS"]
+        browsers: ["Firefox"]
     },
     travis: {
-        browsers: ["PhantomJS", "Firefox"]
+        browsers: ["Firefox"]
     }
 };

@@ -1,5 +1,116 @@
-(function() {
-    var arrayOf = function(pseudoArray) {
+// jshint maxparams:4
+/*global HTMLElement, CustomEvent*/
+var fileInput = (function() {
+    var insertIntoDocument = (function () {
+            "use strict";
+            var importDoc;
+
+            importDoc = (document._currentScript || document.currentScript).ownerDocument;
+
+            return function (obj, idTemplate) {
+                var template = importDoc.getElementById(idTemplate),
+                    clone = document.importNode(template.content, true);
+
+                obj.appendChild(clone);
+            };
+        }()),
+        declaredProps = (function () {
+            "use strict";
+            var exports = {};
+
+            function parse(val, type) {
+                switch (type) {
+                    case Number:
+                        return parseFloat(val || 0, 10);
+                    case Boolean:
+                        return val !== null;
+                    case Object:
+                    case Array:
+                        return JSON.parse(val);
+                    case Date:
+                        return new Date(val);
+                    default:
+                        return val || "";
+                }
+            }
+            function toHyphens(str) {
+                return str.replace(/([A-Z])/g, "-$1").toLowerCase();
+            }
+            function toCamelCase(str) {
+                return str.split("-")
+                    .map(function (x, i) {
+                        return i === 0 ? x : x[0].toUpperCase() + x.slice(1);
+                    }).join("");
+            }
+            exports.serialize = function (val) {
+                if (typeof val === "string") {
+                    return val;
+                }
+                if (typeof val === "number" || val instanceof Date) {
+                    return val.toString();
+                }
+                return JSON.stringify(val);
+            };
+
+            exports.syncProperty = function (obj, props, attr, val) {
+                var name = toCamelCase(attr), type;
+                if (props[name]) {
+                    type = props[name].type || props[name];
+                    obj[name] = parse(val, type);
+                }
+            };
+
+            exports.init = function (obj, props) {
+                Object.defineProperty(obj, "props", {
+                    enumerable : false,
+                    configurable : true,
+                    value : {}
+                });
+
+                Object.keys(props).forEach(function (name) {
+                    var attrName = toHyphens(name), desc, value;
+
+                    desc = props[name].type ? props[name] : { type : props[name] };
+                    value = typeof desc.value === "function" ? desc.value() : desc.value;
+                    obj.props[name] = obj[name] || value;
+
+                    if (obj.getAttribute(attrName) === null) {
+                        if (desc.reflectToAttribute) {
+                            obj.setAttribute(attrName, exports.serialize(obj.props[name]));
+                        }
+                    } else {
+                        obj.props[name] = parse(obj.getAttribute(attrName), desc.type);
+                    }
+                    Object.defineProperty(obj, name, {
+                        get : function () {
+                            return obj.props[name] || parse(obj.getAttribute(attrName), desc.type);
+                        },
+                        set : function (val) {
+                            var old = obj.props[name];
+                            obj.props[name] = val;
+                            if (desc.reflectToAttribute) {
+                                if (desc.type === Boolean) {
+                                    if (val) {
+                                        obj.setAttribute(attrName, "");
+                                    } else {
+                                        obj.removeAttribute(attrName);
+                                    }
+                                } else {
+                                    obj.setAttribute(attrName, exports.serialize(val));
+                                }
+                            }
+                            if (typeof obj[desc.observer] === "function") {
+                                obj[desc.observer](val, old);
+                            }
+                        }
+                    });
+                });
+            };
+
+            return exports;
+        }()),
+
+        arrayOf = function(pseudoArray) {
             return Array.prototype.slice.call(pseudoArray);
         },
 
@@ -77,10 +188,11 @@
 
         // This is the only way (I am aware of) to reset an `<input type="file">`
         // without removing it from the DOM.  Removing it disconnects it
-        // from the CE/Polymer.
+        // from the CE.
         resetInput = function(customEl) {
             // create a form with a hidden reset button
             var tempForm = document.createElement("form"),
+                fileInput = customEl.querySelector(".fileInput"),
                 tempResetButton = document.createElement("button");
 
             tempResetButton.setAttribute("type", "reset");
@@ -88,15 +200,19 @@
             tempForm.appendChild(tempResetButton);
 
             // temporarily move the `<input type="file">` into the form & add form to DOM
-            customEl.$.fileInput.parentNode.insertBefore(tempForm, customEl.$.fileInput);
-            tempForm.appendChild(customEl.$.fileInput);
+            fileInput.parentNode.insertBefore(tempForm, fileInput);
+            tempForm.appendChild(fileInput);
 
             // reset the `<input type="file">`
             tempResetButton.click();
 
             // move the `<input type="file">` back to its original spot & remove form
-            tempForm.parentNode.appendChild(customEl.$.fileInput);
+            tempForm.parentNode.appendChild(fileInput);
             tempForm.parentNode.removeChild(tempForm);
+
+            customEl.files = [];
+            customEl.invalid = {count: 0};
+            customEl.valid = [];
 
             updateValidity(customEl);
         },
@@ -137,99 +253,157 @@
             }
         },
 
-        validationTarget;
+        validationTarget,
 
-
-   this.fileInput = {
-        changeHandler: function() {
-            var customEl = this,
-                files = arrayOf(customEl.$.fileInput.files),
-                invalid = {count: 0},
-                valid = [];
-
-            // Some browsers may fire a change event when the file chooser
-            // dialog is closed via cancel button.  In this case, the
-            //files array will be empty and the event should be ignored.
-            if (files.length) {
-                var sizeValidationResult = getResultOfSizeValidation(customEl.minSize, customEl.maxSize, files);
-                var extensionValidationResult = getResultOfExtensionsValidation(customEl.extensions, sizeValidationResult.valid);
-                var countLimitValidationResult = getResultOfCountLimitValidation(customEl.maxFiles, extensionValidationResult.valid);
-
-                if (sizeValidationResult.tooBig.length) {
-                    invalid.tooBig = sizeValidationResult.tooBig;
-                    invalid.count += sizeValidationResult.tooBig.length;
-                }
-                if (sizeValidationResult.tooSmall.length) {
-                    invalid.tooSmall = sizeValidationResult.tooSmall;
-                    invalid.count += sizeValidationResult.tooSmall.length;
-                }
-                if (extensionValidationResult.invalid.length) {
-                    invalid.badExtension = extensionValidationResult.invalid;
-                    invalid.count += extensionValidationResult.invalid.length;
-                }
-                if (countLimitValidationResult.invalid.length) {
-                    invalid.tooMany = countLimitValidationResult.invalid;
-                    invalid.count += countLimitValidationResult.invalid.length;
-                }
-
-                valid = countLimitValidationResult.valid;
-
-                customEl.invalid = invalid;
-                customEl.files = valid;
-
-                updateValidity(customEl);
-                customEl.fire("change", {invalid: invalid, valid: valid});
+        properties = {
+            accept : {
+                type : String,
+                observer : "setAccept"
+            },
+            camera : Boolean,
+            directory : {
+                type: Boolean,
+                value: false,
+                observer: "setDirectory"
+            },
+            extensions : {
+                type : String //JSON array
+            },
+            maxFiles : {
+                type : Number,
+                value : 0,
+                observer : "setMaxFiles"
+            },
+            maxSize : {
+                type : Number,
+                value : 0
+            },
+            minSize : {
+                type : Number,
+                value : 0
+            },
+            required: {
+                type : Boolean,
+                value: false
             }
-        },
+        };
 
-        created: function() {
-            var customEl = this;
+    var fileInputPrototype = Object.create(HTMLElement.prototype);
+    fileInputPrototype.changeHandler = function(event) {
+        event.stopPropagation();
 
-            customEl.files = [];
-            customEl.invalid = {count: 0};
-        },
+        var customEl = this,
+        fileInput = customEl.querySelector(".fileInput"),
+        files = arrayOf(fileInput.files),
+        invalid = {count: 0},
+        valid = [];
 
-        invalidText: "No valid files selected.",
+        // Some browsers may fire a change event when the file chooser
+        // dialog is closed via cancel button.  In this case, the
+        //files array will be empty and the event should be ignored.
+        if (files.length) {
+            var sizeValidationResult = getResultOfSizeValidation(customEl.minSize, customEl.maxSize, files);
+            var extensionValidationResult = getResultOfExtensionsValidation(customEl.extensions, sizeValidationResult.valid);
+            var countLimitValidationResult = getResultOfCountLimitValidation(customEl.maxFiles, extensionValidationResult.valid);
 
-        maxFiles: 0,
-
-        maxSize: 0,
-
-        minSize: 0,
-
-        domReady: function() {
-            var customEl = this;
-
-            if (customEl.camera != null && isIos()) {
-                customEl.maxFiles = 1;
-
-                var iosCameraAccept = "image/*;capture=camera";
-                if (customEl.accept && customEl.accept.length.trim().length > 0) {
-                    customEl.accept += "," + iosCameraAccept;
-                }
-                else {
-                    customEl.accept = iosCameraAccept;
-                }
+            if (sizeValidationResult.tooBig.length) {
+                invalid.tooBig = sizeValidationResult.tooBig;
+                invalid.count += sizeValidationResult.tooBig.length;
+            }
+            if (sizeValidationResult.tooSmall.length) {
+                invalid.tooSmall = sizeValidationResult.tooSmall;
+                invalid.count += sizeValidationResult.tooSmall.length;
+            }
+            if (extensionValidationResult.invalid.length) {
+                invalid.badExtension = extensionValidationResult.invalid;
+                invalid.count += extensionValidationResult.invalid.length;
+            }
+            if (countLimitValidationResult.invalid.length) {
+                invalid.tooMany = countLimitValidationResult.invalid;
+                invalid.count += countLimitValidationResult.invalid.length;
             }
 
-            if (customEl.maxFiles !== 1) {
-                customEl.$.fileInput.setAttribute("multiple", "");
-            }
+            valid = countLimitValidationResult.valid;
 
-            if (customEl.directory != null && customEl.$.fileInput.webkitdirectory !== undefined) {
-                customEl.$.fileInput.setAttribute("webkitdirectory", "");
-            }
+            customEl.invalid = invalid;
+            customEl.files = valid;
 
-            if (customEl.required != null) {
-                setupValidationTarget(customEl);
-            }
-        },
-
-        reset: function() {
-            var customEl = this;
-
-            customEl.created();
-            resetInput(customEl);
+            updateValidity(customEl);
+            customEl.dispatchEvent(new CustomEvent("change", { detail : {invalid: invalid, valid: valid} }));
         }
     };
+
+
+    fileInputPrototype.invalidText = "No valid files selected.";
+
+    fileInputPrototype.setAccept = function (val) {
+        var fileInput = this.querySelector(".fileInput");
+        fileInput.setAttribute("accept", val);
+    };
+
+    fileInputPrototype.setDirectory = function(val) {
+        var fileInput = this.querySelector(".fileInput");
+        if (val && fileInput.webkitdirectory !== undefined) {
+            fileInput.setAttribute("webkitdirectory", "");
+        }
+        else {
+            fileInput.removeAttribute("webkitdirectory");
+        }
+    };
+
+    fileInputPrototype.setMaxFiles = function (val) {
+        var fileInput = this.querySelector(".fileInput");
+        if (val !== 1) {
+            fileInput.setAttribute("multiple", "");
+        }
+        else {
+            fileInput.removeAttribute("multiple");
+        }
+    };
+
+    fileInputPrototype.attributeChangedCallback = function(attr, oldVal, newVal) {
+        declaredProps.syncProperty(this, properties, attr, newVal);
+    };
+
+    fileInputPrototype.createdCallback = function() {
+        var fileInput, customEl = this;
+
+        insertIntoDocument(this, "file-input");
+        declaredProps.init(this, properties);
+
+        this.setAccept(this.accept);
+
+        fileInput = customEl.querySelector(".fileInput");
+        fileInput.addEventListener("change", this.changeHandler.bind(this));
+
+        customEl.files = [];
+        customEl.invalid = {count: 0};
+
+        if (customEl.camera && isIos()) {
+            customEl.maxFiles = 1;
+
+            var iosCameraAccept = "image/*;capture=camera";
+            if (customEl.accept && customEl.accept.length.trim().length > 0) {
+                customEl.accept += "," + iosCameraAccept;
+            }
+            else {
+                customEl.accept = iosCameraAccept;
+            }
+        }
+
+        this.setMaxFiles(customEl.maxFiles);
+        this.setDirectory(customEl.directory);
+
+        if (customEl.required) {
+            setupValidationTarget(customEl);
+        }
+    };
+
+    fileInputPrototype.reset = function() {
+        var customEl = this;
+
+        resetInput(customEl);
+    };
+
+    return fileInputPrototype;
 }());
