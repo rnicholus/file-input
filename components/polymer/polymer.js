@@ -7,11 +7,11 @@
  * Code distributed by Google as part of the polymer project is also
  * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
  */
-// @version 0.5.1
+// @version 0.5.5
 window.PolymerGestures = {};
 
 (function(scope) {
-  var HAS_FULL_PATH = false;
+  var hasFullPath = false;
 
   // test for full event path support
   var pathTest = document.createElement('meta');
@@ -22,7 +22,7 @@ window.PolymerGestures = {};
     pathTest.addEventListener('testpath', function(ev) {
       if (ev.path) {
         // if the span is in the event path, then path[0] is the real source for all events
-        HAS_FULL_PATH = ev.path[0] === s;
+        hasFullPath = ev.path[0] === s;
       }
       ev.stopPropagation();
     });
@@ -99,7 +99,7 @@ window.PolymerGestures = {};
       return s;
     },
     findTarget: function(inEvent) {
-      if (HAS_FULL_PATH && inEvent.path && inEvent.path.length) {
+      if (hasFullPath && inEvent.path && inEvent.path.length) {
         return inEvent.path[0];
       }
       var x = inEvent.clientX, y = inEvent.clientY;
@@ -113,7 +113,7 @@ window.PolymerGestures = {};
     },
     findTouchAction: function(inEvent) {
       var n;
-      if (HAS_FULL_PATH && inEvent.path && inEvent.path.length) {
+      if (hasFullPath && inEvent.path && inEvent.path.length) {
         var path = inEvent.path;
         for (var i = 0; i < path.length; i++) {
           n = path[i];
@@ -192,7 +192,7 @@ window.PolymerGestures = {};
     },
     path: function(event) {
       var p;
-      if (HAS_FULL_PATH && event.path && event.path.length) {
+      if (hasFullPath && event.path && event.path.length) {
         p = event.path;
       } else {
         p = [];
@@ -368,7 +368,9 @@ window.PolymerGestures = {};
       var e = this.makeBaseEvent(inType, inDict);
       for (var i = 0, keys = Object.keys(inDict), k; i < keys.length; i++) {
         k = keys[i];
-        e[k] = inDict[k];
+        if( k !== 'bubbles' && k !== 'cancelable' ) {
+           e[k] = inDict[k];
+        }
       }
       return e;
     },
@@ -377,7 +379,7 @@ window.PolymerGestures = {};
 
       var e = this.makeBaseEvent(inType, inDict);
       // define inherited MouseEvent properties
-      for(var i = 0, p; i < MOUSE_PROPS.length; i++) {
+      for(var i = 2, p; i < MOUSE_PROPS.length; i++) {
         p = MOUSE_PROPS[i];
         e[p] = inDict[p] || MOUSE_DEFAULTS[i];
       }
@@ -939,7 +941,7 @@ window.PolymerGestures = {};
   };
 })(window.PolymerGestures);
 
-(function (scope) {
+(function(scope) {
   var dispatcher = scope.dispatcher;
   var pointermap = dispatcher.pointermap;
   // radius around touchend that swallows mouse events
@@ -947,11 +949,23 @@ window.PolymerGestures = {};
 
   var WHICH_TO_BUTTONS = [0, 1, 4, 2];
 
-  var CURRENT_BUTTONS = 0;
-  var HAS_BUTTONS = false;
-  try {
-    HAS_BUTTONS = new MouseEvent('test', {buttons: 1}).buttons === 1;
-  } catch (e) {}
+  var currentButtons = 0;
+
+  var FIREFOX_LINUX = /Linux.*Firefox\//i;
+
+  var HAS_BUTTONS = (function() {
+    // firefox on linux returns spec-incorrect values for mouseup.buttons
+    // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent.buttons#See_also
+    // https://codereview.chromium.org/727593003/#msg16
+    if (FIREFOX_LINUX.test(navigator.userAgent)) {
+      return false;
+    }
+    try {
+      return new MouseEvent('test', {buttons: 1}).buttons === 1;
+    } catch (e) {
+      return false;
+    }
+  })();
 
   // handler block for native mouse events
   var mouseEvents = {
@@ -971,7 +985,7 @@ window.PolymerGestures = {};
       dispatcher.listen(target, this.events);
     },
     unregister: function(target) {
-      if (target === document) {
+      if (target.nodeType === Node.DOCUMENT_NODE) {
         return;
       }
       dispatcher.unlisten(target, this.events);
@@ -999,11 +1013,11 @@ window.PolymerGestures = {};
         var type = inEvent.type;
         var bit = WHICH_TO_BUTTONS[inEvent.which] || 0;
         if (type === 'mousedown') {
-          CURRENT_BUTTONS |= bit;
+          currentButtons |= bit;
         } else if (type === 'mouseup') {
-          CURRENT_BUTTONS &= ~bit;
+          currentButtons &= ~bit;
         }
-        e.buttons = CURRENT_BUTTONS;
+        e.buttons = currentButtons;
       }
       return e;
     },
@@ -1025,7 +1039,7 @@ window.PolymerGestures = {};
           // handle case where we missed a mouseup
           if ((HAS_BUTTONS ? e.buttons : e.which) === 0) {
             if (!HAS_BUTTONS) {
-              CURRENT_BUTTONS = e.buttons = 0;
+              currentButtons = e.buttons = 0;
             }
             dispatcher.cancel(e);
             this.cleanupMouse(e.buttons);
@@ -1273,7 +1287,7 @@ window.PolymerGestures = {};
         d.forEach(function(p) {
           this.cancel(p);
           pointermap.delete(p.pointerId);
-        });
+        }, this);
       }
     },
     touchstart: function(inEvent) {
@@ -1402,7 +1416,7 @@ window.PolymerGestures = {};
       dispatcher.listen(target, this.events);
     },
     unregister: function(target) {
-      if (target === document) {
+      if (target.nodeType === Node.DOCUMENT_NODE) {
         return;
       }
       dispatcher.unlisten(target, this.events);
@@ -1478,7 +1492,7 @@ window.PolymerGestures = {};
       dispatcher.listen(target, this.events);
     },
     unregister: function(target) {
-      if (target === document) {
+      if (target.nodeType === Node.DOCUMENT_NODE) {
         return;
       }
       dispatcher.unlisten(target, this.events);
@@ -2047,7 +2061,9 @@ window.PolymerGestures = {};
       'cancel'
     ],
     exposes: [
+      'pinchstart',
       'pinch',
+      'pinchend',
       'rotate'
     ],
     defaultActions: {
@@ -2065,11 +2081,19 @@ window.PolymerGestures = {};
           diameter: points.diameter,
           target: scope.targetFinding.LCA(points.a.target, points.b.target)
         };
+
+        this.firePinch('pinchstart', points.diameter, points);
       }
     },
     up: function(inEvent) {
       var p = pointermap.get(inEvent.pointerId);
+      var num = pointermap.pointers();
       if (p) {
+        if (num === 2) {
+          // fire 'pinchend' before deleting pointer
+          var points = this.calcChord();
+          this.firePinch('pinchend', points.diameter, points);
+        }
         pointermap.delete(inEvent.pointerId);
       }
     },
@@ -2084,9 +2108,9 @@ window.PolymerGestures = {};
     cancel: function(inEvent) {
         this.up(inEvent);
     },
-    firePinch: function(diameter, points) {
+    firePinch: function(type, diameter, points) {
       var zoom = diameter / this.reference.diameter;
-      var e = eventFactory.makeGestureEvent('pinch', {
+      var e = eventFactory.makeGestureEvent(type, {
         bubbles: true,
         cancelable: true,
         scale: zoom,
@@ -2113,7 +2137,7 @@ window.PolymerGestures = {};
       var diameter = points.diameter;
       var angle = this.calcAngle(points);
       if (diameter != this.reference.diameter) {
-        this.firePinch(diameter, points);
+        this.firePinch('pinch', diameter, points);
       }
       if (angle != this.reference.angle) {
         this.fireRotate(angle, points);
@@ -3258,7 +3282,7 @@ window.PolymerGestures = {};
     },
 
     setValue: function(model, newValue) {
-      if (this.path.length == 1);
+      if (this.path.length == 1)
         model = findScope(model, this.path[0]);
 
       return this.path.setValueFrom(model, newValue);
@@ -3361,12 +3385,11 @@ window.PolymerGestures = {};
   Filter.prototype = {
     transform: function(model, observer, filterRegistry, toModelDirection,
                         initialArgs) {
-      var fn = filterRegistry[this.name];
       var context = model;
-      if (fn) {
-        context = undefined;
-      } else {
-        fn = context[this.name];
+      var fn = context[this.name];
+
+      if (!fn) {
+        fn = filterRegistry[this.name];
         if (!fn) {
           console.error('Cannot find function or filter: ' + this.name);
           return;
@@ -3791,7 +3814,7 @@ window.PolymerGestures = {};
 })(this);
 
 Polymer = {
-  version: '0.5.1'
+  version: '0.5.5'
 };
 
 // TODO(sorvell): this ensures Polymer is an object and not a function
@@ -5819,18 +5842,18 @@ scope.isIE = isIE;
     return splices;
   }
 
-  // Export the observe-js object for **Node.js**, with
-  // backwards-compatibility for the old `require()` API. If we're in
-  // the browser, export as a global object.
+  // Export the observe-js object for **Node.js**, with backwards-compatibility
+  // for the old `require()` API. Also ensure `exports` is not a DOM Element.
+  // If we're in the browser, export as a global object.
 
   var expose = global;
 
-  if (typeof exports !== 'undefined') {
+  if (typeof exports !== 'undefined' && !exports.nodeType) {
     if (typeof module !== 'undefined' && module.exports) {
-      expose = exports = module.exports;
+      exports = module.exports;
     }
     expose = exports;
-  } 
+  }
 
   expose.Observer = Observer;
   expose.Observer.runEOM_ = runEOM;
@@ -6025,7 +6048,8 @@ scope.isIE = isIE;
     var eventType = getEventForInputType(input);
 
     function eventHandler() {
-      observable.setValue(input[property]);
+      var isNum = property == 'value' && input.type == 'number';
+      observable.setValue(isNum ? input.valueAsNumber : input[property]);
       observable.discardChanges();
       (postEventFn || noop)(input);
       Platform.performMicrotaskCheckpoint();
@@ -6331,7 +6355,8 @@ scope.isIE = isIE;
     'template': true,
     'repeat': true,
     'bind': true,
-    'ref': true
+    'ref': true,
+    'if': true
   };
 
   var semanticTemplateElements = {
@@ -7489,7 +7514,8 @@ scope.isIE = isIE;
   if (!scope.forceJURL) {
     try {
       var u = new URL('b', 'http://a');
-      hasWorkingUrl = u.href === 'http://a/b';
+      u.pathname = 'c%20d';
+      hasWorkingUrl = u.href === 'http://a/c%20d';
     } catch(e) {}
   }
 
@@ -8132,7 +8158,7 @@ head.insertBefore(style, head.firstChild);
 /**
  * Force any pending data changes to be observed before 
  * the next task. Data changes are processed asynchronously but are guaranteed
- * to be processed, for example, before paintin. This method should rarely be 
+ * to be processed, for example, before painting. This method should rarely be 
  * needed. It does nothing when Object.observe is available; 
  * when Object.observe is not available, Polymer automatically flushes data 
  * changes approximately every 1/10 second. 
@@ -8265,6 +8291,7 @@ var urlResolver = {
   }
 };
 
+var ABS_URL = /(^\/)|(^#)|(^[\w-\d]*:)/;
 var CSS_URL_REGEXP = /(url\()([^)]*)(\))/g;
 var CSS_IMPORT_REGEXP = /(@import[\s]+(?!url\())([^;]*)(;)/g;
 var URL_ATTRS = ['href', 'src', 'action', 'style', 'url'];
@@ -8288,8 +8315,8 @@ function replaceUrlsInCssText(cssText, baseUrl, keepAbsolute, regexp) {
 }
 
 function resolveRelativeUrl(baseUrl, url, keepAbsolute) {
-  // do not resolve '/' absolute urls
-  if (url && url[0] === '/') {
+  // do not resolve absolute urls
+  if (ABS_URL.test(url)) {
     return url;
   }
   var u = new URL(url, baseUrl);

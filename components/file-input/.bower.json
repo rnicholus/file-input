@@ -20,11 +20,11 @@
     "upload"
   ],
   "homepage": "https://github.com/garstasio/file-input",
-  "_release": "9ea1a4a46e",
+  "_release": "453c5978a2",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "9ea1a4a46e06123efe4070e57d6864073b699cd3"
+    "commit": "453c5978a23f7e52040a8df36573f3475e93f453"
   },
   "_source": "git://github.com/garstasio/file-input.git",
   "_target": "master",
