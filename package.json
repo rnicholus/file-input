@@ -1,26 +1,24 @@
 {
-    "author": {
-        "name": "Ray Nicholus"
-    },
-    "bugs": "https://github.com/garstasio/file-input/issues",
-    "description": "web component for styling, normalizing, and generally fixing <input type=\"file\">",
-    "devDependencies": {
-        "grunt": "0.4.x",
-        "grunt-contrib-jshint": "0.10.x",
-        "grunt-karma": "~0.8.2",
-        "karma": "~0.12.0",
-        "karma-coverage": "0.2.x",
-        "karma-coveralls": "0.1.x",
-        "karma-firefox-launcher": "~0.1.2",
-        "karma-jasmine": "~0.2.0",
-        "karma-spec-reporter": "0.0.13",
-        "webcomponents.js": "0.7.2"
-    },
-    "license": "MIT",
-    "name": "file-input",
-    "repository": {
-        "type" : "git",
-        "url" : "https://github.com/garstasio/file-input.git"
-    },
-    "version": "2.0.0"
+  "author": {
+    "name": "Ray Nicholus"
+  },
+  "bugs": "https://github.com/rnicholus/file-input/issues",
+  "description": "web component for styling, normalizing, and generally fixing <input type=\"file\">",
+  "devDependencies": {
+    "jasmine-core": "latest",
+    "karma": "latest",
+    "karma-firefox-launcher": "latest",
+    "karma-jasmine": "latest",
+    "karma-spec-reporter": "latest"
+  },
+  "license": "MIT",
+  "name": "file-input-element",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/rnicholus/file-input.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "3.0.0"
 }
